@@ -1,0 +1,104 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "0.0.1"
+        vectorDrawables.useSupportLibrary true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(debugKey)
+            // No debug config
+        }
+
+        release {
+            storeFile file(releaseKey)
+            storePassword KEY_PWD
+            keyAlias ALIAS_NAME
+            keyPassword ALIAS_PWD
+        }
+    }
+
+    buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+
+            minifyEnabled true
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    // 输出apk名称为五子棋_v1.0_2015-01-15_wandoujia.apk
+                    def fileName = "CHWSP00_v${defaultConfig.versionName}_${releaseTime()}.apk"
+                    outputFileName = fileName
+                }
+
+            }
+        }
+
+        lintOptions { abortOnError false }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        // work-runtime-ktx 2.1.0 and above now requires Java 8
+        jvmTarget = "1.8"
+
+        // Enable Coroutines and Flow APIs
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
+    }
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation rootProject.ext.dependencies.androidXAppcompat
+    implementation rootProject.ext.dependencies.androidXConstraintLayout
+    implementation rootProject.ext.dependencies.androidXCore
+    implementation project(path: ':CommonLib')
+
+    implementation rootProject.ext.dependencies.umsdkCommon
+    implementation rootProject.ext.dependencies.umsdkCrash
+    implementation rootProject.ext.dependencies.umsdkAsms
+    implementation rootProject.ext.dependencies.ankoAll
+    implementation rootProject.ext.dependencies.androidXLegacyV4
+    implementation rootProject.ext.dependencies.MPAndroidChart
+
+}
