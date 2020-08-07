@@ -63,13 +63,13 @@ object CommUtil {
 
     @JvmOverloads
     @JvmStatic
-    fun toastShort(@NotNull context: Context, msg: String) {
+    fun toastShort(@NotNull context: Context, msg: String = "") {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     @JvmOverloads
     @JvmStatic
-    fun toastLong(@NotNull context: Context, msg: String) {
+    fun toastLong(@NotNull context: Context, msg: String = "") {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
     }
 }

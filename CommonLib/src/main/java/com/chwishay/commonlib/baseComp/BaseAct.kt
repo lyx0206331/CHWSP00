@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
  * Create time:20-8-3 上午10:28
  * Description:
  **/
-open abstract class BaseAct: AppCompatActivity() {
+abstract class BaseAct : AppCompatActivity() {
 
     companion object {
         val TAG = this.javaClass.canonicalName

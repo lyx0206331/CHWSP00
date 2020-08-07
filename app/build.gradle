@@ -19,10 +19,11 @@ android {
     }
 
     signingConfigs {
-        debug {
-            storeFile file(debugKey)
-            // No debug config
-        }
+        //AS4.0此设置命名为debug时会导致不能创建Activity
+//        dev {
+//            storeFile file(debugKey)
+//            // No debug config
+//        }
 
         release {
             storeFile file(releaseKey)
@@ -41,7 +42,7 @@ android {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.dev
         }
 
         release {
@@ -100,5 +101,12 @@ dependencies {
     implementation rootProject.ext.dependencies.ankoAll
     implementation rootProject.ext.dependencies.androidXLegacyV4
     implementation rootProject.ext.dependencies.MPAndroidChart
+    implementation project(path: ':BTLib')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    testImplementation rootProject.ext.dependencies.androidXExtJUnit
+    androidTestImplementation rootProject.ext.dependencies.androidXTestRunner
+    androidTestImplementation rootProject.ext.dependencies.androidXTextEspressoCore
 
 }
