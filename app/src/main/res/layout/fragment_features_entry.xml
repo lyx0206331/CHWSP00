@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="50dp"
+        android:paddingTop="50dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivTextLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/logo_l"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnReg"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnReg"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="@string/new_register"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:background="@drawable/fillet_blue_bg"
+            app:layout_constraintTop_toBottomOf="@+id/ivTextLogo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnUse"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUse"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="@string/use_device"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:background="@drawable/fillet_blue_bg"
+            app:layout_constraintTop_toBottomOf="@+id/btnReg"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnReport" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnReport"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="@string/check_report"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:background="@drawable/fillet_blue_bg"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnUse"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

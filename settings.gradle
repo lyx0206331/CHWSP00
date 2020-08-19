@@ -1,3 +1,4 @@
+include ':FastBleLib'
 include ':BTLib'
 include ':CommonLib'
 include ':app'

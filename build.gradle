@@ -10,7 +10,7 @@ ext {
 def getReleaseKeystore() {
     def os = org.gradle.internal.os.OperatingSystem.current()
     if (os.isWindows()) {
-        return 'D:\\Dev\\Android\\appkey.keystore'
+        return 'C:\\Android\\appkey.keystore'
     } else if (os.isLinux()) {
         return '/home/adrian/Dev/Android/appkey.keystore'
     } else if (os.isMacOsX()) {
@@ -23,7 +23,7 @@ def getReleaseKeystore() {
 def getDebugKeystore() {
     def os = org.gradle.internal.os.OperatingSystem.current()
     if (os.isWindows()) {
-        return 'D:\\Dev\\Android\\debug.keystore'
+        return 'C:\\Android\\debug.keystore'
     } else if (os.isLinux()) {
         return '/home/adrian/Dev/Android/debug.keystore'
     } else if (os.isMacOsX()) {

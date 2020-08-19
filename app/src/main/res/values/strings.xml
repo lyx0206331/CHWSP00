@@ -2,4 +2,68 @@
     <string name="app_name">CHWSP00</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="new_register">新用户注册</string>
+    <string name="use_device">使用设备</string>
+    <string name="check_report">查看报告</string>
+
+    <string name="name">姓名:</string>
+    <string name="sex">性别:</string>
+    <string name="age">年龄:</string>
+    <string name="case_num">病历号:</string>
+    <string name="affected_side">患侧:</string>
+    <string name="left_side">左侧</string>
+    <string name="right_side">右侧</string>
+    <string name="protective_gear_type">护具类型</string>
+    <string name="waist_brace">腰部支具</string>
+    <string name="hip_joint_brace">髋关节支具</string>
+    <string name="knee_joint_brace">膝关节支具</string>
+    <string name="ankle_joint_brace">踝关节支具</string>
+    <string name="nothing">无</string>
+    <string name="others">其它:</string>
+    <string name="walk_type">行走类型:</string>
+    <string name="walk_endependently">独立行走</string>
+    <string name="single_crutch">单拐</string>
+    <string name="crutches">双拐</string>
+    <string name="walker">助行器</string>
+    <string name="assisted_by_others">他人搀扶</string>
+    <string name="diseases">病种:</string>
+    <string name="commit_reg">提交注册</string>
+
+    <string name="recent_login_users">近期登录用户</string>
+
+    <string name="walking_ability_test">步行能力测试</string>
+    <string name="distance">距离:</string>
+    <string name="meter">米</string>
+    <string name="start_record">开始记录</string>
+    <string name="stop_record">结束记录</string>
+
+    <string name="test_user_choice">测试用户选择</string>
+
+    <string name="choose_analysis_interval">请选择分析区间</string>
+    <string name="confirm">确定</string>
+
+    <string name="gait_evaluation_record">步态评估报告</string>
+    <string name="basic_data">基础数据</string>
+    <string name="test_distance">测试路程</string>
+    <string name="test_time">测试时间</string>
+    <string name="total_steps">总步数</string>
+    <string name="everage_step_speed">平均步速</string>
+    <string name="space_parameters">空间参数</string>
+
+    <string name="left_step_length">左步长</string>
+    <string name="right_step_length">右步长</string>
+    <string name="step_stride">步幅</string>
+    <string name="step_cadence">步频</string>
+    <string name="left_swing_time">左侧摆动时间</string>
+    <string name="right_swing_time">右侧摆动时间</string>
+    <string name="left_brace_time">左侧支撑时间</string>
+    <string name="right_brace_time">右侧支撑时间</string>
+    <string name="left_brace_swing_ratio">左侧支撑相、摆动相占比</string>
+    <string name="right_brace_swing_ratio">右侧支撑相、摆动想占比</string>
+    <string name="double_brace_time">双支撑时间</string>
+    <string name="gait_cycle">步态周期</string>
+    <string name="symmetry">对称性</string>
+    <string name="l_r_brace_time_ratio">左侧支撑与右侧支撑时间比</string>
+    <string name="l_r_swing_time_ratio">左侧摆动与右侧摆动时间比</string>
 </resources>

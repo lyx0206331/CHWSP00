@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.text.TextUtils
+import androidx.annotation.RequiresApi
 import com.chwishay.commonlib.tools.orDefault
 
 //  ┏┓　　　┏┓
@@ -35,6 +36,7 @@ import com.chwishay.commonlib.tools.orDefault
  * Create time:20-8-5 上午11:19
  * Description:
  **/
+@RequiresApi(Build.VERSION_CODES.ECLAIR)
 class BTConnectUtil(private val activity: Activity) {
 
     private var btAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
