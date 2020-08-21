@@ -17,4 +17,47 @@
         <item name="android:backgroundDimEnabled">true</item><!--模糊-->
     </style>
 
+    <style name="MiddleTextRadioButtonStyle">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@drawable/selector_black_white_font</item>
+        <item name="android:background">@drawable/selector_blue_white_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="SmallTextRadioButtonStyle">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@drawable/selector_black_white_font</item>
+        <item name="android:background">@drawable/selector_blue_white_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="MiddleBlackTextStyle">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/black4e4e4e</item>
+    </style>
+
+    <style name="SmallBlackTextStyle">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/black4e4e4e</item>
+    </style>
+
+    <style name="SmallBlueTextStyle">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/blue169bd5</item>
+    </style>
+
+    <style name="LargeBlueTextStyle">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/blue169bd5</item>
+    </style>
+
+    <style name="LargeWhiteTextStyle">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

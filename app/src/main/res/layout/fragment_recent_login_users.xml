@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".activity.TestUserChooseFragment">
+        tools:context=".activity.RecentLoginUsersFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:text="@string/test_user_choose"
+            android:text="@string/recent_login_users"
             style="@style/LargeBlueTextStyle"
             android:textStyle="bold" />
 

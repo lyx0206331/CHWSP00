@@ -1,5 +1,7 @@
 package com.chwishay.commonlib.tools
 
+import android.util.Log
+import com.chwishay.commonlib.BuildConfig
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,6 +59,27 @@ fun Boolean?.orDefault(default: Boolean = false): Boolean = this ?: default
 
 fun String?.orDefault(default: String = ""): String = this ?: default
 
-fun Long.formatDateString(formatStr: String = DateFormatStr.FORMAT_YMD_CN, locale: Locale = Locale.CHINESE): String = SimpleDateFormat(formatStr, locale).format(Date(this))
+fun String.logE(msg: String, tr: Throwable? = null) =
+    if (BuildConfig.DEBUG) Log.e(this, msg, tr) else 0
 
-fun Date.formatDateString(formatStr: String = DateFormatStr.FORMAT_YMD_CN, locale: Locale = Locale.CHINESE): String = SimpleDateFormat(formatStr, locale).format(this)
+fun String.logV(msg: String, tr: Throwable? = null) =
+    if (BuildConfig.DEBUG) Log.v(this, msg, tr) else 0
+
+fun String.logD(msg: String, tr: Throwable? = null) =
+    if (BuildConfig.DEBUG) Log.d(this, msg, tr) else 0
+
+fun String.logW(msg: String, tr: Throwable? = null) =
+    if (BuildConfig.DEBUG) Log.w(this, msg, tr) else 0
+
+fun String.logI(msg: String, tr: Throwable? = null) =
+    if (BuildConfig.DEBUG) Log.i(this, msg, tr) else 0
+
+fun Long.formatDateString(
+    formatStr: String = DateFormatStr.FORMAT_YMD_CN,
+    locale: Locale = Locale.CHINESE
+): String = SimpleDateFormat(formatStr, locale).format(Date(this))
+
+fun Date.formatDateString(
+    formatStr: String = DateFormatStr.FORMAT_YMD_CN,
+    locale: Locale = Locale.CHINESE
+): String = SimpleDateFormat(formatStr, locale).format(this)

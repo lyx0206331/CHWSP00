@@ -1,13 +1,13 @@
 package com.chwishay.chwsp00.activity
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.databinding.FragmentFeaturesEntryBinding
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class FeaturesEntryFragment : Fragment() {
 
@@ -22,9 +22,15 @@ class FeaturesEntryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFeaturesEntryBinding.inflate(inflater, container, false)
-        binding.btnReg.onClick {  }
-        binding.btnUse.onClick {  }
-        binding.btnReport.onClick {  }
+        binding.btnReg.setOnClickListener {
+            it.findNavController().navigate(R.id.actionFeaturesEntry2newRegister)
+        }
+        binding.btnUse.setOnClickListener {
+            it.findNavController().navigate(R.id.actionFeaturesEntry2testUserChoose)
+        }
+        binding.btnReport.setOnClickListener {
+            it.findNavController().navigate(R.id.actionFeaturesEntry2recentLogin)
+        }
         return binding.root
     }
 

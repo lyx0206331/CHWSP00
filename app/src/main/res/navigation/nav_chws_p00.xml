@@ -2,94 +2,115 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/frag_features_entry">
+    app:startDestination="@id/fragFeaturesEntry">
 
     <fragment
-        android:id="@+id/frag_features_entry"
+        android:id="@+id/fragFeaturesEntry"
         android:name="com.chwishay.chwsp00.activity.FeaturesEntryFragment"
-        tools:layout="@layout/fragment_features_entry" >
-        <action android:id="@+id/action_features_entry2new_register"
-            app:destination="@id/frag_new_register"
+        tools:layout="@layout/fragment_features_entry">
+        <action
+            android:id="@+id/actionFeaturesEntry2newRegister"
+            app:destination="@id/fragNewRegister"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/actionFeaturesEntry2testUserChoose"
+            app:destination="@id/fragTestUserChoose"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/actionFeaturesEntry2recentLogin"
+            app:destination="@id/fragRecentLoginUsers"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_new_register"
+        android:id="@+id/fragNewRegister"
         android:name="com.chwishay.chwsp00.activity.NewRegisterFragment"
-        tools:layout="@layout/fragment_new_register" >
-        <action android:id="@+id/action_new_register2walk_ability_test"
-            app:destination="@id/frag_walk_ability_test"
+        tools:layout="@layout/fragment_new_register">
+        <action
+            android:id="@+id/actionNewRegister2walkAbilityTest"
+            app:destination="@id/fragWalkAbilityTest"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_test_user_choose"
+        android:id="@+id/fragTestUserChoose"
         android:name="com.chwishay.chwsp00.activity.TestUserChooseFragment"
         tools:layout="@layout/fragment_test_user_choose">
-        <action android:id="@+id/action_test_user_choose2walk_ability_test"
-            app:destination="@id/frag_walk_ability_test"
+        <action
+            android:id="@+id/actionTestUserChoose2walkAbilityTest"
+            app:destination="@id/fragWalkAbilityTest"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_current_login_users"
-        android:name="com.chwishay.chwsp00.activity.CurrentLoginUsersFragment"
-        tools:layout="@layout/fragment_current_login_users">
-        <action android:id="@+id/action_current_login2user_reports"
-            app:destination="@id/frag_user_reports"
+        android:id="@+id/fragRecentLoginUsers"
+        android:name="com.chwishay.chwsp00.activity.RecentLoginUsersFragment"
+        tools:layout="@layout/fragment_recent_login_users">
+        <action
+            android:id="@+id/actionRecentLogin2userReports"
+            app:destination="@id/fragUserReports"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_walk_ability_test"
+        android:id="@+id/fragWalkAbilityTest"
         android:name="com.chwishay.chwsp00.activity.WalkAbilityTestFragment"
         tools:layout="@layout/fragment_walk_ability_test">
-        <action android:id="@+id/action_walk_ability_test2choose_analysis_interval"
-            app:destination="@id/frag_choose_analysis_interval"
+        <action
+            android:id="@+id/actionWalkAbilityTest2chooseAnalysisInterval"
+            app:destination="@id/fragChooseAnalysisInterval"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_user_reports"
+        android:id="@+id/fragUserReports"
         android:name="com.chwishay.chwsp00.activity.UserReportsFragment"
         tools:layout="@layout/fragment_user_reports">
-        <action android:id="@+id/action_user_reports2gait_evaluation_report"
-            app:destination="@id/frag_gait_evaluation_report"
+        <action
+            android:id="@+id/actionUserReports2gaitEvaluationReport"
+            app:destination="@id/fragGaitEvaluationReport"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_choose_analysis_interval"
+        android:id="@+id/fragChooseAnalysisInterval"
         android:name="com.chwishay.chwsp00.activity.ChooseAnalysisIntervalFragment"
         tools:layout="@layout/fragment_choose_analysis_interval">
-        <action android:id="@+id/action_choose_analysis_interval2gait_evaluation_report"
-            app:destination="@id/frag_gait_evaluation_report"
+        <action
+            android:id="@+id/actionChooseAnalysisInterval2gaitEvaluationReport"
+            app:destination="@id/fragGaitEvaluationReport"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/frag_gait_evaluation_report"
+        android:id="@+id/fragGaitEvaluationReport"
         android:name="com.chwishay.chwsp00.activity.GaitEvaluationReportFragment"
         tools:layout="@layout/fragment_gait_evaluation_report"></fragment>
 

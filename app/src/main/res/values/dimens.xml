@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_elevation">5dp</dimen>
+
+    <dimen name="font_size_l">30sp</dimen>
+    <dimen name="font_size_m">20sp</dimen>
+    <dimen name="font_size_s">15sp</dimen>
 </resources>
