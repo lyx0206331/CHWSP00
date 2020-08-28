@@ -18,8 +18,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
 
     signingConfigs {
@@ -100,6 +100,9 @@ dependencies {
     implementation rootProject.ext.dependencies.androidXNavigationFragment
     implementation rootProject.ext.dependencies.androidXNavigationUI
     implementation rootProject.ext.dependencies.androidXLegacyV4
+    implementation rootProject.ext.dependencies.androidXRoomRuntime
+    annotationProcessor rootProject.ext.dependencies.androidXRoomCompiler
+    implementation rootProject.ext.dependencies.androidXRoomKTX
     implementation project(path: ':CommonLib')
 
     implementation rootProject.ext.dependencies.umsdkCommon

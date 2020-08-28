@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.databinding.FragmentNewRegisterBinding
+import com.chwishay.chwsp00.model.UserInfo
+import com.chwishay.commonlib.tools.logE
 
 class NewRegisterFragment : Fragment() {
 
@@ -30,8 +32,10 @@ class NewRegisterFragment : Fragment() {
             it.findNavController().navigateUp()
         }
         binding.btnCommitReg.setOnClickListener {
+            binding.userInfo.toString().logE(binding.userInfo?.name.orEmpty())
             it.findNavController().navigate(R.id.actionNewRegister2walkAbilityTest)
         }
+        binding.userInfo = UserInfo(0, "测试")
         return binding.root
     }
 

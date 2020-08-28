@@ -7,11 +7,11 @@
     <string name="use_device">使用设备</string>
     <string name="check_report">查看报告</string>
 
-    <string name="name">姓名:</string>
-    <string name="sex">性别:</string>
-    <string name="age">年龄:</string>
+    <string name="name">姓&#160;&#160;&#160;&#160;名:</string>
+    <string name="sex">性&#160;&#160;&#160;&#160;别:</string>
+    <string name="age">年&#160;&#160;&#160;&#160;龄:</string>
     <string name="case_num">病历号:</string>
-    <string name="affected_side">患侧:</string>
+    <string name="affected_side">患&#160;&#160;&#160;&#160;侧:</string>
     <string name="left_side">左侧</string>
     <string name="right_side">右侧</string>
     <string name="protective_gear_type">护具类型:</string>

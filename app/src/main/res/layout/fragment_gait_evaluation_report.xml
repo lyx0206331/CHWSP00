@@ -10,16 +10,8 @@
             type="com.chwishay.chwsp00.model.UserInfo" />
 
         <variable
-            name="baseData"
-            type="com.chwishay.chwsp00.model.BaseData" />
-
-        <variable
-            name="spaceParams"
-            type="com.chwishay.chwsp00.model.SpaceParams" />
-
-        <variable
-            name="symmetry"
-            type="com.chwishay.chwsp00.model.Symmetry" />
+            name="recordDetailData"
+            type="com.chwishay.chwsp00.model.RecordDetailData" />
 
     </data>
 

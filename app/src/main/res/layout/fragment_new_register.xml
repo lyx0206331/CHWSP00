@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="userInfo"
+            type="com.chwishay.chwsp00.model.UserInfo" />
+
     </data>
 
     <LinearLayout
@@ -72,8 +76,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginRight="35dp"
+                        android:layout_marginRight="20dp"
                         android:singleLine="true"
+                        android:text="@{userInfo.name}"
                         style="@style/MiddleBlackTextStyle" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -131,7 +136,7 @@
                         style="@style/MiddleBlackTextStyle" />
                 </LinearLayout>
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/rg_affected_side"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,8 +151,8 @@
                         style="@style/MiddleBlackTextStyle"
                         android:text="@string/affected_side" />
 
-                    <RadioButton
-                        android:id="@+id/rbLeftSide"
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/cbLeftSide"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -155,15 +160,14 @@
                         android:text="@string/left_side"
                         style="@style/MiddleTextRadioButtonStyle" />
 
-                    <RadioButton
-                        android:id="@+id/rbRightSide"
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/cbRightSide"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/right_side"
-                        android:checked="true"
                         style="@style/MiddleTextRadioButtonStyle" />
-                </RadioGroup>
+                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -180,7 +184,7 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/protective_gear_type" />
 
-                    <com.chwishay.chwsp00.views.MultiRadioGroup2
+                    <LinearLayout
                         android:id="@+id/rgProtectiveGear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -193,16 +197,16 @@
                             android:layout_marginBottom="10dp"
                             android:orientation="horizontal">
 
-                            <RadioButton
-                                android:id="@+id/rbWaistBrace"
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cbWaistBrace"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/waist_brace"
                                 style="@style/SmallTextRadioButtonStyle" />
 
-                            <RadioButton
-                                android:id="@+id/rbHipJointBrace"
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cbHipJointBrace"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -211,8 +215,8 @@
                                 android:text="@string/hip_joint_brace"
                                 style="@style/SmallTextRadioButtonStyle" />
 
-                            <RadioButton
-                                android:id="@+id/rbKneeJointBrace"
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cbKneeJointBrace"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -225,16 +229,16 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <RadioButton
-                                android:id="@+id/rbAnkleJointBrace"
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cbAnkleJointBrace"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/ankle_joint_brace"
                                 style="@style/SmallTextRadioButtonStyle" />
 
-                            <RadioButton
-                                android:id="@+id/rbNoProtectiveGear"
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cbNoProtectiveGear"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -243,14 +247,14 @@
                                 android:text="@string/no"
                                 style="@style/SmallTextRadioButtonStyle" />
 
-                            <RadioButton
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:contentDescription="仅点位，无需可见"
                                 android:visibility="invisible" />
                         </LinearLayout>
-                    </com.chwishay.chwsp00.views.MultiRadioGroup2>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -270,7 +274,8 @@
                             android:id="@+id/etOtherProtectiveGear"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            style="@style/SmallBlackTextStyle" />
+                            style="@style/SmallBlackTextStyle"
+                            android:text="" />
                     </LinearLayout>
                 </RelativeLayout>
 

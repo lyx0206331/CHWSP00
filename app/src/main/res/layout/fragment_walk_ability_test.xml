@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="userInfo"
+            type="com.chwishay.chwsp00.model.UserInfo" />
+
     </data>
 
     <LinearLayout

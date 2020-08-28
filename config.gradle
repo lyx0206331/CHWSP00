@@ -47,6 +47,8 @@ ext {
     def X_NAV_FRAGMENT_VERSION = "2.3.0"
     def X_NAV_UI_VERSION = "2.3.0"
 
+    def X_ROOM_VERSION = "2.2.5"
+
     def ANKO_VERSION = "0.10.8"
 
     def ALIBABA_AROUTER_API_VERSION = "1.5.0"
@@ -66,6 +68,7 @@ ext {
             androidXExtJUnit        : 'androidx.test.ext:junit:' + X_EXT_JUNIT_VERSION,
             androidXTestRunner      : 'androidx.test:runner:' + X_TEST_RUNNER_VERSION,
             androidXTextEspressoCore: 'androidx.test.espresso:espresso-core:' + X_TEST_ESPRESSO_CORE_VERSION,
+            androidXRoomTesting     : 'androidx.room:room-testing:' + X_ROOM_VERSION,
 
             androidXCore            : 'androidx.core:core-ktx:' + X_CORE_VERSION,
             androidXAppcompat       : 'androidx.appcompat:appcompat:' + X_APPCOMPAT_VERSION,
@@ -95,6 +98,15 @@ ext {
             androidXWebkit          : 'androidx.webkit:webkit:' + X_WEBKIT_VERSION,
             androidXNavigationFragment: 'androidx.navigation:navigation-fragment-ktx:' + X_NAV_FRAGMENT_VERSION,
             androidXNavigationUI    : 'androidx.navigation:navigation-ui-ktx:' + X_NAV_UI_VERSION,
+
+            androidXRoomRuntime     : 'androidx.room:room-runtime:' + X_ROOM_VERSION,
+            androidXRoomCompiler    : 'androidx.room:room-compiler:' + X_ROOM_VERSION,
+            // optional - Kotlin Extensions and Coroutines support for Room
+            androidXRoomKTX         : 'androidx.room:room-ktx:' + X_ROOM_VERSION,
+            // optional - RxJava support for Room
+            androidXRoomRxjava2     : 'androidx.room:room-rxjava2:' + X_ROOM_VERSION,
+            // optional - Guava support for Room, including Optional and ListenableFuture
+            androidXRoomGuava       : 'androidx.room:room-guava:' + X_ROOM_VERSION,
 
             ankoAll                 : 'org.jetbrains.anko:anko:' + ANKO_VERSION,
 
