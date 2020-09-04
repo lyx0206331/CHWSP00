@@ -101,6 +101,7 @@ dependencies {
     implementation rootProject.ext.dependencies.androidXNavigationUI
     implementation rootProject.ext.dependencies.androidXLegacyV4
     implementation rootProject.ext.dependencies.androidXRoomRuntime
+    implementation project(path: ':FastBleLib')
     annotationProcessor rootProject.ext.dependencies.androidXRoomCompiler
     implementation rootProject.ext.dependencies.androidXRoomKTX
     implementation project(path: ':CommonLib')

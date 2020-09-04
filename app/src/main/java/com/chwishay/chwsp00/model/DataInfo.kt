@@ -1,8 +1,6 @@
 package com.chwishay.chwsp00.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import org.jetbrains.annotations.NotNull
 
 //                       _ooOoo_
@@ -31,13 +29,13 @@ import org.jetbrains.annotations.NotNull
  * date:2020/8/19 0019 14:18
  * description:用户信息
  */
-@Entity(tableName = "users_table")
+@Entity(tableName = "users_table", indices = [Index("case_num", unique = true)])
 data class UserInfo(
     @ColumnInfo(name = "_id") var id: Long = 0,
     //姓名
-    var name: String? = null,
+    @ColumnInfo var name: String? = null,
     //年龄
-    var age: Byte = 0,
+    @ColumnInfo var age: Byte = 0,
     //性别
     @ColumnInfo(name = "is_male") var isMale: Boolean = true,
     //病历号
@@ -53,31 +51,44 @@ data class UserInfo(
     //其它行走类型
     @ColumnInfo(name = "other_walk_type") var otherWalkType: String? = null,
     //病种
-    var diseases: String? = null
+    @ColumnInfo var diseases: String? = null
 ) {
+    @Ignore
+    var recordFiles: List<RecordFile>? = null
 }
 
-@Entity(tableName = "record_files_table")
+@Entity(
+    tableName = "record_files_table",
+    foreignKeys = [ForeignKey(
+        entity = UserInfo::class,
+        childColumns = ["case_num"],
+        parentColumns = ["case_num"]
+    )],
+    indices = [Index("create_time")]
+)
 data class RecordFile(
     @ColumnInfo(name = "case_num") var caseNum: String? = "",
-    @ColumnInfo(name = "create_time") var createTime: Long = 0,
+    @PrimaryKey @ColumnInfo(name = "create_time") var createTime: Long = 0,
     @ColumnInfo(name = "total_time_length") var totalTimeLength: Long = 0,
     @ColumnInfo(name = "analysis_start_time") var analysisStartTime: Long = 0,
     @ColumnInfo(name = "analysis_stop_time") var analysisStopTime: Long = 0
-)
+) {
+    @Ignore
+    var userInfo: UserInfo? = null
+}
 
 /**
  * 基础数据
  */
-@Entity(tableName = "record_detail_table")
+@Entity(tableName = "record_detail_table", primaryKeys = ["case_num", "create_time"])
 data class RecordDetailData @JvmOverloads constructor(
     @ColumnInfo(name = "case_num") var caseNum: String? = "",
     @ColumnInfo(name = "create_time") var createTime: Long = 0,
 
     //测试路程(m)
-    var distance: Float = 0f,
+    @ColumnInfo var distance: Float = 0f,
     //测试时间(mm)
-    var time: Int = 0,
+    @ColumnInfo var time: Int = 0,
     //总步数(步)
     @ColumnInfo(name = "step_count") var stepCount: Int = 0,
     //平均步速(m/s)

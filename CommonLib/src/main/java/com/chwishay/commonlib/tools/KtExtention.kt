@@ -1,6 +1,9 @@
 package com.chwishay.commonlib.tools
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.StringRes
 import com.chwishay.commonlib.BuildConfig
 import java.text.SimpleDateFormat
 import java.util.*
@@ -73,6 +76,16 @@ fun String.logW(msg: String, tr: Throwable? = null) =
 
 fun String.logI(msg: String, tr: Throwable? = null) =
     if (BuildConfig.DEBUG) Log.i(this, msg, tr) else 0
+
+fun Context.showShortToast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+fun Context.showLongToast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+
+fun Context.showShortToast(@StringRes resId: Int) =
+    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+
+fun Context.showLongToast(@StringRes resId: Int) =
+    Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
 
 fun Long.formatDateString(
     formatStr: String = DateFormatStr.FORMAT_YMD_CN,
