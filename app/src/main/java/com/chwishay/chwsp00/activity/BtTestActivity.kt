@@ -13,6 +13,7 @@ import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.adapter.DeviceAdapter
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.utils.ObserverManager
+import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleGattCallback
@@ -48,11 +49,12 @@ class BtTestActivity : BaseActivity() {
                 }
 
                 override fun onDisConnect(bleDevice: BleDevice?) {
-                    TODO("Not yet implemented")
+                    if (BleManager.getInstance().isConnected(bleDevice)) {
+                        BleManager.getInstance().disconnect(bleDevice)
+                    }
                 }
 
                 override fun onDetail(bleDevice: BleDevice?) {
-                    TODO("Not yet implemented")
                 }
             })
         }
@@ -75,15 +77,13 @@ class BtTestActivity : BaseActivity() {
                 BleManager.getInstance().cancelScan()
             }
         }
+        list_device.adapter = deviceAdapter
     }
 
     override fun loadData() {
         BleManager.getInstance().init(application)
         BleManager.getInstance().enableLog(BuildConfig.DEBUG).setReConnectCount(1, 5000)
-            .setConnectOverTime(20000).setOperateTimeout(5000).initScanRule(
-                BleScanRuleConfig.Builder().setServiceUuids(null).setDeviceName(true, null)
-                    .setDeviceMac(null).setAutoConnect(false).setScanTimeOut(10000).build()
-            )
+            .setConnectOverTime(20000).setOperateTimeout(5000)
     }
 
     override fun onResume() {
@@ -106,6 +106,10 @@ class BtTestActivity : BaseActivity() {
     }
 
     private fun startScan() {
+        BleManager.getInstance().initScanRule(
+            BleScanRuleConfig.Builder().setServiceUuids(null).setDeviceName(true, null)
+                .setDeviceMac(null).setAutoConnect(false).setScanTimeOut(10000).build()
+        )
         BleManager.getInstance().scan(object : BleScanCallback() {
             override fun onScanStarted(success: Boolean) {
                 deviceAdapter.clearScanDevice()
@@ -118,6 +122,7 @@ class BtTestActivity : BaseActivity() {
             override fun onScanning(bleDevice: BleDevice?) {
                 deviceAdapter.addDevice(bleDevice)
                 deviceAdapter.notifyDataSetChanged()
+                TAG.logE("${bleDevice.toString()}")
             }
 
             override fun onScanFinished(scanResultList: MutableList<BleDevice>?) {

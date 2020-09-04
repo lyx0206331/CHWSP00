@@ -1,5 +1,6 @@
 package com.chwishay.chwsp00.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,9 @@ class FeaturesEntryFragment : Fragment() {
         }
         binding.btnReport.setOnClickListener {
             it.findNavController().navigate(R.id.actionFeaturesEntry2recentLogin)
+        }
+        binding.ivTextLogo.setOnClickListener {
+            startActivity(Intent(activity, BtTestActivity::class.java))
         }
         return binding.root
     }

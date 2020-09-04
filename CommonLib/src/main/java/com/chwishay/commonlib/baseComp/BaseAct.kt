@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 abstract class BaseAct : AppCompatActivity() {
 
     companion object {
-        val TAG = this::class.java.canonicalName
+        val TAG = "P00_TAG"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
