@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.chwishay.chwsp00.R
+import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.databinding.FragmentFeaturesEntryBinding
 
 class FeaturesEntryFragment : Fragment() {

@@ -124,8 +124,12 @@ public abstract class BleScanPresenter implements BluetoothAdapter.LeScanCallbac
             AtomicBoolean equal = new AtomicBoolean(false);
             for (String name : mDeviceNames) {
                 String remoteName = bleDevice.getName();
-                if (remoteName == null)
+                if (remoteName == null) {
                     remoteName = "";
+                }
+                if (name == null) {
+                    name = "";
+                }
                 if (mFuzzy ? remoteName.contains(name) : remoteName.equals(name)) {
                     equal.set(true);
                 }

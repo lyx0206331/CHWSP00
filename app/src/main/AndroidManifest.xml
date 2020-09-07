@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.LineChartActivity" />
-        <activity android:name=".activity.BtTestActivity" />
+        <activity android:name=".btUtil.BtTestActivity" />
         <activity android:name=".activity.ChartActivity" />
         <activity android:name=".activity.MainTestActivity">
             <!--<intent-filter>

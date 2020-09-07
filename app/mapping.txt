@@ -8615,13 +8615,13 @@ androidx.viewpager.widget.ViewPager$SavedState$1 -> androidx.viewpager.widget.Vi
     androidx.viewpager.widget.ViewPager$SavedState[] newArray(int) -> c
 androidx.viewpager.widget.ViewPager$ViewPositionComparator -> androidx.viewpager.widget.ViewPager$l:
     int compare(android.view.View,android.view.View) -> a
-com.chwishay.chwsp00.activity.BtTestActivity -> com.chwishay.chwsp00.activity.BtTestActivity:
-    com.chwishay.chwsp00.activity.BtTestActivity$Companion Companion -> t
+com.chwishay.chwsp00.btUtil.BtTestActivity -> com.chwishay.chwsp00.btUtil.BtTestActivity:
+    com.chwishay.chwsp00.btUtil.BtTestActivity$Companion Companion -> t
     int getLayoutId() -> F
     void initVariables() -> G
     void initViews() -> H
     void loadData() -> I
-com.chwishay.chwsp00.activity.BtTestActivity$Companion -> com.chwishay.chwsp00.activity.BtTestActivity$a:
+com.chwishay.chwsp00.btUtil.BtTestActivity$Companion -> com.chwishay.chwsp00.btUtil.BtTestActivity$a:
     void startActivity(android.content.Context) -> a
 com.chwishay.chwsp00.activity.ChartActivity -> com.chwishay.chwsp00.activity.ChartActivity:
     com.chwishay.chwsp00.activity.ChartActivity$Companion Companion -> u

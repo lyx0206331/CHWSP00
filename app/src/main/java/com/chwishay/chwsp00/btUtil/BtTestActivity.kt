@@ -1,6 +1,8 @@
-package com.chwishay.chwsp00.activity
+package com.chwishay.chwsp00.btUtil
 
+import android.Manifest
 import android.app.ProgressDialog
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.content.Intent
@@ -8,11 +10,10 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.chwishay.chwsp00.BuildConfig
 import com.chwishay.chwsp00.R
-import com.chwishay.chwsp00.adapter.DeviceAdapter
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.utils.ObserverManager
+import com.chwishay.commonlib.tools.PermissionUtil
 import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
@@ -33,6 +34,13 @@ class BtTestActivity : BaseActivity() {
             context.startActivity(Intent(context, BtTestActivity::class.java))
         }
     }
+
+
+    private val permissionUtil: PermissionUtil by lazy { PermissionUtil(this) }
+    private val permissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     private val operatingAnim by lazy {
         AnimationUtils.loadAnimation(this, R.anim.rotate)
@@ -59,6 +67,9 @@ class BtTestActivity : BaseActivity() {
             })
         }
     }
+    private val connectedAdapter by lazy {
+        ConnectedDevAdapter(this)
+    }
     private val progressDialog by lazy { ProgressDialog(this) }
 
     override fun getLayoutId(): Int {
@@ -72,18 +83,17 @@ class BtTestActivity : BaseActivity() {
         btn_scan.textResource = R.string.start_scan
         btn_scan.onClick {
             if (btn_scan.text == getString(R.string.start_scan)) {
-                startScan()
+                checkPermissions()
             } else {
                 BleManager.getInstance().cancelScan()
             }
         }
+        btn_entry.onClick { }
         list_device.adapter = deviceAdapter
+        list_connected.adapter = connectedAdapter
     }
 
     override fun loadData() {
-        BleManager.getInstance().init(application)
-        BleManager.getInstance().enableLog(BuildConfig.DEBUG).setReConnectCount(1, 5000)
-            .setConnectOverTime(20000).setOperateTimeout(5000)
     }
 
     override fun onResume() {
@@ -97,6 +107,34 @@ class BtTestActivity : BaseActivity() {
         BleManager.getInstance().destroy()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun checkPermissions() {
+        val btAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (!btAdapter.isEnabled) {
+            showShortToast("请先打开蓝牙")
+        } else {
+            permissionUtil.requestPermission(
+                permissions,
+                object : PermissionUtil.IPermissionCallback {
+                    override fun allowedPermissions() {
+                        startScan()
+                    }
+
+                    override fun deniedPermissions() {
+                        permissionUtil.showTips("当前手机扫描蓝牙需要打开定位功能，是否手动设置?")
+                    }
+                })
+        }
+    }
+
     private fun showConnectedDevice() {
         deviceAdapter.clearConnectedDevice()
         BleManager.getInstance().allConnectedDevice.forEach {
@@ -108,7 +146,7 @@ class BtTestActivity : BaseActivity() {
     private fun startScan() {
         BleManager.getInstance().initScanRule(
             BleScanRuleConfig.Builder().setServiceUuids(null).setDeviceName(true, null)
-                .setDeviceMac(null).setAutoConnect(false).setScanTimeOut(10000).build()
+                .setDeviceMac("").setAutoConnect(false).setScanTimeOut(10000).build()
         )
         BleManager.getInstance().scan(object : BleScanCallback() {
             override fun onScanStarted(success: Boolean) {
@@ -117,18 +155,20 @@ class BtTestActivity : BaseActivity() {
                 img_loading.startAnimation(operatingAnim)
                 img_loading.isVisible = true
                 btn_scan.textResource = R.string.stop_scan
+                TAG.logE("onScanStarted")
             }
 
             override fun onScanning(bleDevice: BleDevice?) {
+                TAG.logE("${bleDevice.toString()}")
                 deviceAdapter.addDevice(bleDevice)
                 deviceAdapter.notifyDataSetChanged()
-                TAG.logE("${bleDevice.toString()}")
             }
 
             override fun onScanFinished(scanResultList: MutableList<BleDevice>?) {
                 img_loading.clearAnimation()
                 img_loading.isInvisible = true
                 btn_scan.textResource = R.string.start_scan
+                TAG.logE("onScanFinished")
             }
         })
     }
@@ -136,6 +176,7 @@ class BtTestActivity : BaseActivity() {
     private fun connect(bleDevice: BleDevice?) {
         BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
             override fun onStartConnect() {
+                progressDialog.show()
             }
 
             override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
@@ -154,6 +195,8 @@ class BtTestActivity : BaseActivity() {
                 progressDialog.dismiss()
                 deviceAdapter.addDevice(bleDevice)
                 deviceAdapter.notifyDataSetChanged()
+                connectedAdapter.addDevice(bleDevice)
+                connectedAdapter.notifyDataSetChanged()
             }
 
             override fun onDisConnected(
@@ -165,10 +208,12 @@ class BtTestActivity : BaseActivity() {
                 progressDialog.dismiss()
                 deviceAdapter.removeDevice(bleDevice)
                 deviceAdapter.notifyDataSetChanged()
+                connectedAdapter.removeDevice(bleDevice)
+                connectedAdapter.notifyDataSetChanged()
                 if (isActiveDisConnected) {
-                    showShortToast(R.string.active_disconnected)
+                    showShortToast("${getString(R.string.active_disconnected)}:${bleDevice?.mac}")
                 } else {
-                    showShortToast(R.string.disconnected)
+                    showShortToast("${bleDevice?.mac}:${R.string.disconnected}")
                     bleDevice?.apply { ObserverManager.getInstance().notifyObserver(this) }
                 }
             }

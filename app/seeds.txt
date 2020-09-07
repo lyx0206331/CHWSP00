@@ -338,7 +338,7 @@ com.umeng.analytics.pro.bs: boolean a
 androidx.appcompat.R$style: int ThemeOverlay_AppCompat_ActionBar
 com.github.mikephil.charting.charts.BarLineChartBase: void setVisibleXRangeMinimum(float)
 com.umeng.analytics.pro.ac: java.lang.String n
-com.chwishay.chwsp00.activity.BtTestActivity
+com.chwishay.chwsp00.btUtil.BtTestActivity
 com.uc.crashsdk.a.g: void j()
 com.umeng.analytics.pro.c$d$b: java.lang.String g
 com.umeng.umcrash.UMCrash: java.lang.String TAG
@@ -1684,7 +1684,7 @@ com.chwishay.chwsp00.R$styleable: int ActionBar_contentInsetRight
 com.umeng.commonsdk.stateless.f$2: int compare(java.lang.Object,java.lang.Object)
 com.umeng.commonsdk.config.d$a: com.umeng.commonsdk.config.d$a E
 com.github.mikephil.charting.charts.BarLineChartBase: void setBorderColor(int)
-com.chwishay.chwsp00.activity.BtTestActivity: BtTestActivity()
+com.chwishay.chwsp00.btUtil.BtTestActivity: BtTestActivity()
 com.chwishay.chwsp00.R$style: int TextAppearance_Widget_AppCompat_Toolbar_Title
 com.umeng.vt.diff.Channel$1: void onImprintValueChanged(java.lang.String,java.lang.String)
 androidx.appcompat.R$attr: int fontStyle

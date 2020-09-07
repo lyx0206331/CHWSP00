@@ -3,6 +3,7 @@ package com.chwishay.chwsp00.activity
 import android.Manifest
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
+import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.views.LoadingDialog
 import com.chwishay.commonlib.tools.CommUtil
 import com.chwishay.commonlib.tools.PermissionUtil

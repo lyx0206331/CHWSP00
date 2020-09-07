@@ -106,4 +106,15 @@ public class BleDevice implements Parcelable {
         this.mTimestampNanos = timestampNanos;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BleDevice bleDevice = (BleDevice) o;
+        return this.getMac().equals(bleDevice.getMac());
+    }
 }

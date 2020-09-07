@@ -1,4 +1,4 @@
-package com.chwishay.chwsp00.adapter;
+package com.chwishay.chwsp00.btUtil;
 
 
 import android.content.Context;

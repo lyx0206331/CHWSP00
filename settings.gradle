@@ -1,3 +1,4 @@
+include ':bletestmodule'
 include ':FastBleLib'
 include ':BTLib'
 include ':CommonLib'
