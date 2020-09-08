@@ -12,16 +12,19 @@ import com.clj.fastble.BleManager;
 import com.clj.fastble.data.BleDevice;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ConnectedDevAdapter extends BaseAdapter {
 
     private Context context;
-    private List<BleDevice> bleDeviceList;
+    private ArrayList<BleDevice> bleDeviceList;
 
     public ConnectedDevAdapter(Context context) {
         this.context = context;
         bleDeviceList = new ArrayList<>();
+    }
+
+    public ArrayList<BleDevice> getAllDevices() {
+        return bleDeviceList;
     }
 
     public void addDevice(BleDevice bleDevice) {

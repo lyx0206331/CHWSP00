@@ -88,7 +88,12 @@ class BtTestActivity : BaseActivity() {
                 BleManager.getInstance().cancelScan()
             }
         }
-        btn_entry.onClick { }
+        btn_entry.onClick {
+            BtNotifyActivity.startActivity(
+                this@BtTestActivity,
+                connectedAdapter.allDevices
+            )
+        }
         list_device.adapter = deviceAdapter
         list_connected.adapter = connectedAdapter
     }
