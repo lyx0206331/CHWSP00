@@ -24,8 +24,7 @@
                 android:id="@+id/switchNotify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="接收数据通知"
-                android:checked="true" />
+                android:text="接收数据通知" />
         </TableRow>
 
         <TableRow>
@@ -57,19 +56,27 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="保存到txt文件" />
+                    android:text="保存到文件:" />
 
                 <EditText
                     android:id="@+id/etFileName"
-                    android:layout_width="200dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
                     android:textSize="14sp"
                     android:hint="请输入文件名" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=".txt" />
 
                 <Button
                     android:id="@+id/btnSave"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:text="保存" />
@@ -87,15 +94,16 @@
     <TextView
         android:id="@+id/tvData"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_marginTop="5dp"
         android:padding="5dp"
         android:background="@drawable/shape_blue_stroke" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent" />
+        android:layerType="software"
+        android:background="@drawable/shape_dotted_line_blue" />
 
 </LinearLayout>

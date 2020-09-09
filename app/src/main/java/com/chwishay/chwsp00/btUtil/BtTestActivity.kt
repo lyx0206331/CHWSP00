@@ -38,6 +38,8 @@ class BtTestActivity : BaseActivity() {
 
     private val permissionUtil: PermissionUtil by lazy { PermissionUtil(this) }
     private val permissions = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
@@ -134,7 +136,7 @@ class BtTestActivity : BaseActivity() {
                     }
 
                     override fun deniedPermissions() {
-                        permissionUtil.showTips("当前手机扫描蓝牙需要打开定位功能，是否手动设置?")
+                        permissionUtil.showTips("当前手机扫描蓝牙需要打开定位功能, 读写文件需要读写权限，是否手动设置?")
                     }
                 })
         }
