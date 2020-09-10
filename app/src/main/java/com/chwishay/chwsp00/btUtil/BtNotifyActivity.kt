@@ -15,7 +15,6 @@ import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.data.BleDevice
 import kotlinx.android.synthetic.main.activity_bt_notify.*
-import java.io.File
 
 class BtNotifyActivity : BaseActivity(), Observer {
 
@@ -29,9 +28,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     private val adapter by lazy {
-        NotifyAdapter(this) { fileName, bleDeviceInfo, data ->
-            saveData2File(fileName, bleDeviceInfo, data)
-        }
+        NotifyAdapter(this)
     }
 
     private var devices: ArrayList<BleDevice>? = null
@@ -59,7 +56,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
     override fun initViews() {
         rvNotify.adapter = adapter
         adapter.devices = getDeviceInfos()
-        //处理内外部滑动冲突问题
+        //处理RecyclerView内外滑动冲突问题
         rvNotify.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 rv.findChildViewUnder(e.x, e.y)?.apply {
@@ -87,15 +84,6 @@ class BtNotifyActivity : BaseActivity(), Observer {
             BleManager.getInstance().clearCharacterCallback(it)
         }
         ObserverManager.getInstance().deleteObserver(this)
-    }
-
-    private fun saveData2File(fileName: String, bleDeviceInfo: BleDeviceInfo, data: ByteArray) {
-        val file = File("$fileName.txt")
-        if (file.exists()) {
-            showShortToast("文件已存在，请重新输入")
-        } else {
-            bleDeviceInfo.write2File(file.absolutePath, data)
-        }
     }
 
     override fun disConnected(bleDevice: BleDevice) {

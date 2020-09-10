@@ -18,7 +18,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="Device Name" />
+                android:text="Device Name"
+                android:textStyle="bold" />
 
             <Switch
                 android:id="@+id/switchNotify"
@@ -73,13 +74,13 @@
 
                 <Button
                     android:id="@+id/btnSave"
-                    android:layout_width="80dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:text="保存" />
+                    android:text="开始保存" />
             </LinearLayout>
 
             <Button
@@ -97,6 +98,7 @@
         android:layout_height="150dp"
         android:layout_marginTop="5dp"
         android:padding="5dp"
+        android:scrollbars="vertical"
         android:background="@drawable/shape_blue_stroke" />
 
     <View

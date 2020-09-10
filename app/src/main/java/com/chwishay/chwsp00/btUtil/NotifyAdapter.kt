@@ -50,10 +50,7 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
  * date:2020/9/8 0008 16:23
  * description:
  */
-class NotifyAdapter(
-    val context: Context,
-    val saveListener: ((String, BleDeviceInfo, ByteArray) -> Unit)
-) :
+class NotifyAdapter(val context: Context) :
     RecyclerView.Adapter<NotifyAdapter.NotifyViewHolder>() {
 
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -105,21 +102,12 @@ class NotifyAdapter(
                                                 }
 
                                                 override fun onCharacteristicChanged(data: ByteArray?) {
-                                                    if (bleDeviceInfo.startTime == 0L) {
-                                                        bleDeviceInfo.startTime =
-                                                            System.currentTimeMillis()
-                                                    } else if (System.currentTimeMillis() - bleDeviceInfo.startTime >= 1000) {
-                                                        holder.tvReceiveSpeed.text =
-                                                            "${bleDeviceInfo.speed}byte/s"
-                                                        bleDeviceInfo.startTime =
-                                                            System.currentTimeMillis()
-                                                        bleDeviceInfo.lastSecondTotal =
-                                                            bleDeviceInfo.total
-                                                    }
                                                     val data = gattCharacteristic.value
-                                                    bleDeviceInfo.total += data.size
+                                                    bleDeviceInfo.lastData = data
+                                                    holder.tvReceiveSpeed.text =
+                                                        "${bleDeviceInfo.speed}byte/s"
                                                     holder.tvTotalData.text =
-                                                        "总接收数据:${bleDeviceInfo.total}byte"
+                                                        "总接收数据:${bleDeviceInfo.totalSize}byte"
                                                     appendData(
                                                         holder.tvData,
                                                         HexUtil.formatHexString(data, true)
@@ -141,15 +129,21 @@ class NotifyAdapter(
                                     ) {
                                         holder.btnSave.context.showShortToast("请输入文件名")
                                     } else {
-                                        saveListener.invoke(
-                                            fileName.trim().toString(),
-                                            bleDeviceInfo,
-                                            gattCharacteristic.value
-                                        )
+                                        bleDeviceInfo.needSave = !bleDeviceInfo.needSave
+                                        if (bleDeviceInfo.needSave) {
+                                            bleDeviceInfo.fileName = fileName.toString()
+                                            context.showShortToast("开始保存数据")
+                                            holder.btnSave.text = "停止保存"
+                                        } else {
+                                            context.showShortToast("停止保存数据")
+                                            holder.btnSave.text = "开始保存"
+                                        }
                                     }
                                 }
                                 holder.btnClear.onClick {
                                     holder.tvData.text = ""
+                                    holder.tvTotalData.text = "总接收数据:0byte"
+                                    holder.tvReceiveSpeed.text = "0byte/s"
                                 }
                             }
                         }
@@ -159,6 +153,9 @@ class NotifyAdapter(
         }
     }
 
+    /**
+     * 追加数据并滚动到最后
+     */
     private fun appendData(tv: TextView, data: String) {
         context.runOnUiThread {
             tv.apply {
