@@ -46,6 +46,8 @@ object DateFormatStr {
     const val FORMAT_HM = "HH:mm"
     const val FORMAT_MS_CN = "mm分ss秒"
     const val FORMAT_MS = "mm:ss"
+
+    const val FORMAT_HMS_SSS = "HH:mm:ss.SSS"
 }
 
 fun Short?.orDefault(default: Short = 0): Short = this ?: default

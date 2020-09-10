@@ -1,6 +1,8 @@
 package com.chwishay.chwsp00.model
 
 import android.os.Environment
+import com.chwishay.commonlib.tools.DateFormatStr
+import com.chwishay.commonlib.tools.formatDateString
 import com.chwishay.commonlib.tools.orDefault
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
@@ -60,6 +62,8 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             }
             totalSize += field
         }
+
+    //最后一次传输数据
     var lastData: ByteArray? = null
         set(value) {
             field = value
@@ -68,9 +72,14 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
                 writeStr2File(fileName!!, field)
             }
         }
+
+    //是否需要保存
     var needSave = false
     var fileName: String? = null
 
+    /**
+     * 保存原始文件
+     */
     private fun writeSrc2File(fileName: String, data: ByteArray?) {
         if (data == null) return
         thread {
@@ -83,17 +92,26 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
 
     }
 
+    /**
+     * 保存十六进制字符串文件
+     */
     private fun writeStr2File(fileName: String, data: ByteArray?) {
         if (data == null) return
+        val content = "[${
+            System.currentTimeMillis().formatDateString(DateFormatStr.FORMAT_HMS_SSS)
+        }] ${HexUtil.formatHexString(data, true)}\n"
         thread {
             val file = checkFileExists(fileName)
             BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).apply {
-                write("${HexUtil.formatHexString(data, true)} ")
+                write(content)
                 close()
             }
         }
     }
 
+    /**
+     * 检测目标文件是否存在，不存在则自动创建
+     */
     private fun checkFileExists(fileName: String): File {
         val dir = File("${Environment.getExternalStorageDirectory().absolutePath}/chws/")
         if (!dir.exists()) {
