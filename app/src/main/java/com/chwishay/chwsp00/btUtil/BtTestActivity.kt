@@ -18,7 +18,6 @@ import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleGattCallback
-import com.clj.fastble.callback.BleMtuChangedCallback
 import com.clj.fastble.callback.BleScanCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
@@ -205,15 +204,15 @@ class BtTestActivity : BaseActivity() {
                 deviceAdapter.notifyDataSetChanged()
                 connectedAdapter.addDevice(bleDevice)
                 connectedAdapter.notifyDataSetChanged()
-                BleManager.getInstance().setMtu(bleDevice, 39, object : BleMtuChangedCallback() {
-                    override fun onSetMTUFailure(exception: BleException?) {
-                        showShortToast("MTU修改失败")
-                    }
-
-                    override fun onMtuChanged(mtu: Int) {
-                        TAG.logE("MTU修改为$mtu")
-                    }
-                })
+//                BleManager.getInstance().setMtu(bleDevice, 37, object : BleMtuChangedCallback() {
+//                    override fun onSetMTUFailure(exception: BleException?) {
+//                        showShortToast("MTU修改失败")
+//                    }
+//
+//                    override fun onMtuChanged(mtu: Int) {
+//                        TAG.logE("MTU修改为$mtu")
+//                    }
+//                })
             }
 
             override fun onDisConnected(

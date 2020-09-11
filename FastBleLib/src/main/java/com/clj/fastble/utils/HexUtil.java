@@ -17,8 +17,9 @@ public class HexUtil {
     }
 
     protected static char[] encodeHex(byte[] data, char[] toDigits) {
-        if (data == null)
+        if (data == null) {
             return null;
+        }
         int l = data.length;
         char[] out = new char[l << 1];
         for (int i = 0, j = 0; i < l; i++) {
@@ -42,13 +43,29 @@ public class HexUtil {
         return new String(encodeHex(data, toDigits));
     }
 
+    public static float formatHexFloat(byte[] data, int offset) {
+        if (data == null || offset + 4 > data.length) {
+            throw new IllegalArgumentException("传入参数不正确");
+        } else {
+            int l = data[offset + 3];
+            l &= 0xff;
+            l |= ((long) data[offset + 2] << 8);
+            l &= 0xffff;
+            l |= ((long) data[offset + 1] << 16);
+            l &= 0xffffff;
+            l |= ((long) data[offset + 0] << 24);
+            return Float.intBitsToFloat(l);
+        }
+    }
+
     public static String formatHexString(byte[] data) {
         return formatHexString(data, false);
     }
 
     public static String formatHexString(byte[] data, boolean addSpace) {
-        if (data == null || data.length < 1)
+        if (data == null || data.length < 1) {
             return null;
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
             String hex = Integer.toHexString(data[i] & 0xFF);
@@ -56,8 +73,9 @@ public class HexUtil {
                 hex = '0' + hex;
             }
             sb.append(hex);
-            if (addSpace)
+            if (addSpace) {
                 sb.append(" ");
+            }
         }
         return sb.toString().trim();
     }

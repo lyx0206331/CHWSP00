@@ -141,8 +141,9 @@ class NotifyAdapter(val context: Context) :
                                     }
                                 }
                                 holder.btnClear.onClick {
+                                    bleDeviceInfo.totalSize = 0
                                     holder.tvData.text = ""
-                                    holder.tvTotalData.text = "总接收数据:0byte"
+                                    holder.tvTotalData.text = "总接收数据:${bleDeviceInfo.totalSize}byte"
                                     holder.tvReceiveSpeed.text = "0byte/s"
                                 }
                             }
@@ -159,6 +160,9 @@ class NotifyAdapter(val context: Context) :
     private fun appendData(tv: TextView, data: String) {
         context.runOnUiThread {
             tv.apply {
+                if (text.length >= 4000) {
+                    text = ""
+                }
                 append(data)
                 append("\n")
                 val offset = lineCount * lineHeight

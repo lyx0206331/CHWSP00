@@ -1,15 +1,11 @@
 package com.chwishay.chwsp00.model
 
 import android.os.Environment
-import com.chwishay.commonlib.tools.DateFormatStr
-import com.chwishay.commonlib.tools.formatDateString
+import android.util.Log
 import com.chwishay.commonlib.tools.orDefault
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStreamWriter
+import java.io.*
 import kotlin.concurrent.thread
 
 //                       _ooOoo_
@@ -69,7 +65,8 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             field = value
             lastDataSize = field?.size.orDefault()
             if (needSave && !fileName.isNullOrEmpty()) {
-                writeStr2File(fileName!!, field)
+                writeStr2File(fileName!!, field, true)
+                writeStr2File(fileName!!, field, false)
             }
         }
 
@@ -95,13 +92,32 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
     /**
      * 保存十六进制字符串文件
      */
-    private fun writeStr2File(fileName: String, data: ByteArray?) {
+    private fun writeStr2File(fileName: String, data: ByteArray?, isSrc: Boolean = true) {
         if (data == null) return
-        val content = "[${
-            System.currentTimeMillis().formatDateString(DateFormatStr.FORMAT_HMS_SSS)
-        }] ${HexUtil.formatHexString(data, true)}\n"
         thread {
-            val file = checkFileExists(fileName)
+
+            val content = if (isSrc) "${HexUtil.formatHexString(data, true)}\n" else {
+                if (data.size >= 35) {
+                    val frameCount = data.size / 35
+                    val sb = StringBuilder()
+                    for (i in 0 until frameCount) {
+                        val result = FloatArray(18) { 0f }
+                        val baseOffset = i * 35
+                        result[2] = HexUtil.formatHexFloat(data, baseOffset + 7)
+                        result[3] = HexUtil.formatHexFloat(data, baseOffset + 11)
+                        result[4] = HexUtil.formatHexFloat(data, baseOffset + 15)
+                        result[8] = HexUtil.formatHexFloat(data, baseOffset + 22)
+                        result[9] = HexUtil.formatHexFloat(data, baseOffset + 26)
+                        result[10] = HexUtil.formatHexFloat(data, baseOffset + 30)
+                        sb.append(result.contentToString())
+                    }
+                    "${sb}\n"
+                } else {
+                    "${HexUtil.formatHexString(data, true)}\n"
+                }
+            }
+//            "DATA".logE("$content")
+            val file = checkFileExists(if (isSrc) "${fileName}_src" else "${fileName}_rst")
             BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).apply {
                 write(content)
                 close()
@@ -122,5 +138,34 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             file.createNewFile()
         }
         return file
+    }
+
+    fun readFromFile(filePath: String): FloatArray {
+        val file = File(filePath)
+        if (!file.exists()) {
+            throw FileNotFoundException("文件不存在")
+        }
+
+        val sf = StringBuilder()
+        val fis = FileInputStream(file)
+        fis?.let {
+            val isr = InputStreamReader(fis)
+            val br = BufferedReader(isr)
+            var line: String? = br.readLine()
+            while (line != null) {
+                sf.append(line)
+                line = br.readLine()
+            }
+            isr.close()
+            br.close()
+            fis.close()
+        }
+        Log.e("SRC_DATA", sf.toString())
+        val list = sf.split(" ", "\n")
+        val result = FloatArray(list.size)
+        list?.forEachIndexed { index, s ->
+            result[index] = s.toFloat()
+        }
+        return result
     }
 }
