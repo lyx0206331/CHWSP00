@@ -8719,9 +8719,9 @@ com.chwishay.commonlib.tools.PermissionUtil$showTips$1 -> c.a.b.a.c$b:
     com.chwishay.commonlib.tools.PermissionUtil this$0 -> a
 com.chwishay.commonlib.tools.PermissionUtil$showTips$2 -> c.a.b.a.c$c:
     com.chwishay.commonlib.tools.PermissionUtil$showTips$2 INSTANCE -> a
-com.chwshay.commonlib.baseApp.BaseApp$Companion$instance$2 -> com.chwshay.commonlib.baseApp.BaseApp$Companion$instance$2:
-    com.chwshay.commonlib.baseApp.BaseApp$Companion$instance$2 INSTANCE -> b
-    com.chwshay.commonlib.baseApp.BaseApp invoke() -> a
+com.chwishay.commonlib.baseComp.BaseApp$Companion$instance$2 -> com.chwishay.commonlib.baseComp.BaseApp$Companion$instance$2:
+    com.chwishay.commonlib.baseComp.BaseApp$Companion$instance$2 INSTANCE -> b
+    com.chwishay.commonlib.baseComp.BaseApp invoke() -> a
     java.lang.Object invoke() -> b
 com.github.mikephil.charting.animation.ChartAnimator -> c.b.a.a.a.a:
     android.animation.ValueAnimator$AnimatorUpdateListener mListener -> a

@@ -98,3 +98,21 @@ fun Date.formatDateString(
     formatStr: String = DateFormatStr.FORMAT_YMD_CN,
     locale: Locale = Locale.CHINESE
 ): String = SimpleDateFormat(formatStr, locale).format(this)
+
+fun ByteArray.read2FloatBE(offset: Int) =
+    if (this == null || this.size < offset + 4) throw IllegalArgumentException("传入参数不正确")
+    else java.lang.Float.intBitsToFloat(
+        0xff000000.and(this[offset].toInt().shl(24).toLong())
+            .or(0x00ff0000.and(this[offset + 1].toInt().shl(16)).toLong())
+            .or(0x0000ff00.and(this[offset + 2].toInt().shl(8)).toLong())
+            .or(0x000000ff.and(this[offset + 3].toInt()).toLong()).toInt()
+    )
+
+fun ByteArray.read2FloatLE(offset: Int) =
+    if (this == null || this.size < offset + 4) throw IllegalArgumentException("传入参数不正确")
+    else java.lang.Float.intBitsToFloat(
+        0xff000000.and(this[offset + 3].toInt().shl(24).toLong())
+            .or(0x00ff0000.and(this[offset + 2].toInt().shl(16)).toLong())
+            .or(0x0000ff00.and(this[offset + 1].toInt().shl(8)).toLong())
+            .or(0x000000ff.and(this[offset].toInt()).toLong()).toInt()
+    )

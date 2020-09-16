@@ -87,6 +87,7 @@ class NotifyAdapter(val context: Context) :
                         bluetoothGattService.characteristics.forEach { gattCharacteristic ->
                             if (gattCharacteristic.properties.and(BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                                 holder.switchNotify.onCheckedChange { buttonView, isChecked ->
+                                    holder.etFileName.isEnabled = !isChecked
                                     if (isChecked) {
                                         BleManager.getInstance().notify(
                                             this@apply,
@@ -123,6 +124,10 @@ class NotifyAdapter(val context: Context) :
                                     }
                                 }
                                 holder.btnSave.onClick {
+                                    if (!bleDeviceInfo.needSave && holder.switchNotify.isChecked) {
+                                        context.showShortToast("请先关闭接收通知")
+                                        return@onClick
+                                    }
                                     val fileName = holder.etFileName.text
                                     if (fileName.isNullOrEmpty() || fileName.trim()
                                             .isNullOrEmpty()

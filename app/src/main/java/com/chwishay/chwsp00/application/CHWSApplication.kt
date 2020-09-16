@@ -1,7 +1,7 @@
 package com.chwishay.chwsp00.application
 
 import com.chwishay.chwsp00.BuildConfig
-import com.chwshay.commonlib.baseApp.BaseApp
+import com.chwishay.commonlib.baseComp.BaseApp
 import com.clj.fastble.BleManager
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure

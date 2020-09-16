@@ -1068,8 +1068,8 @@ androidx.core.widget.ContentLoadingProgressBar:
     public synchronized void show()
     private static final int MIN_SHOW_TIME
     private static final int MIN_DELAY
-com.chwshay.commonlib.baseApp.BaseApp$Companion:
-    public final com.chwshay.commonlib.baseApp.BaseApp getInstance()
+com.chwishay.commonlib.baseComp.BaseApp$Companion:
+    public final com.chwishay.commonlib.baseComp.BaseApp getInstance()
 androidx.core.util.HalfKt
 androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$VFullPath:
     public boolean canApplyTheme()
@@ -4294,7 +4294,7 @@ androidx.swiperefreshlayout.R$color
 androidx.appcompat.graphics.drawable.DrawerArrowDrawable$ArrowDirection
 org.jetbrains.anko.generated.appcompatV7.coroutines.R$attr
 org.jetbrains.anko.appcompatV7.R$styleable
-com.chwshay.commonlib.baseApp.BaseApp:
+com.chwishay.commonlib.baseComp.BaseApp:
     public static final synthetic kotlin.Lazy access$getInstance$cp()
 androidx.core.util.SparseArrayKt$keyIterator$1
 androidx.core.view.ViewPropertyAnimatorCompat:
@@ -11164,7 +11164,7 @@ kotlinx.coroutines.internal.LockFreeLinkedListKt:
 com.github.mikephil.charting.utils.MPPointF:
     public void my_readFromParcel(android.os.Parcel)
     public static final android.os.Parcelable$Creator CREATOR
-com.chwshay.commonlib.baseApp.BaseApp$Companion
+com.chwishay.commonlib.baseComp.BaseApp$Companion
 androidx.appcompat.graphics.drawable.DrawableContainer:
     public int mLastIndex
 androidx.core.app.JobIntentService:
@@ -11308,9 +11308,9 @@ androidx.core.app.JobIntentService$CompatWorkEnqueuer:
 androidx.media.AudioAttributesCompat:
     public static final int[] SDK_USAGES
 kotlin.jvm.functions.Function22
-com.chwshay.commonlib.baseApp.BaseApp:
+com.chwishay.commonlib.baseComp.BaseApp:
     public static final kotlin.Lazy instance$delegate
-    public static final com.chwshay.commonlib.baseApp.BaseApp$Companion Companion
+    public static final com.chwishay.commonlib.baseComp.BaseApp$Companion Companion
 androidx.media.MediaBrowserServiceCompatApi21$BrowserRoot:
     public void <init>(java.lang.String,android.os.Bundle)
 com.github.mikephil.charting.animation.Easing$12

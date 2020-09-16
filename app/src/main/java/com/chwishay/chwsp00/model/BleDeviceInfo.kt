@@ -3,6 +3,7 @@ package com.chwishay.chwsp00.model
 import android.os.Environment
 import android.util.Log
 import com.chwishay.commonlib.tools.orDefault
+import com.chwishay.commonlib.tools.read2FloatBE
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
 import java.io.*
@@ -103,15 +104,17 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
                     for (i in 0 until frameCount) {
                         val result = FloatArray(18) { 0f }
                         val baseOffset = i * 35
-                        result[2] = HexUtil.formatHexFloat(data, baseOffset + 7)
-                        result[3] = HexUtil.formatHexFloat(data, baseOffset + 11)
-                        result[4] = HexUtil.formatHexFloat(data, baseOffset + 15)
-                        result[8] = HexUtil.formatHexFloat(data, baseOffset + 22)
-                        result[9] = HexUtil.formatHexFloat(data, baseOffset + 26)
-                        result[10] = HexUtil.formatHexFloat(data, baseOffset + 30)
-                        sb.append(result.contentToString())
+                        result[2] = data.read2FloatBE(baseOffset + 7)
+                        result[3] = data.read2FloatBE(baseOffset + 11)
+                        result[4] = data.read2FloatBE(baseOffset + 15)
+                        result[8] = data.read2FloatBE(baseOffset + 22)
+                        result[9] = data.read2FloatBE(baseOffset + 26)
+                        result[10] = data.read2FloatBE(baseOffset + 30)
+                        val str = "${result.contentToString().replace(",", "")}"
+//                        "RST".logE(str)
+                        sb.append("${str.subSequence(1, str.lastIndex)}\n")
                     }
-                    "${sb}\n"
+                    "$sb"
                 } else {
                     "${HexUtil.formatHexString(data, true)}\n"
                 }

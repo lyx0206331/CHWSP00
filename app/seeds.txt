@@ -1031,7 +1031,7 @@ androidx.appcompat.R$styleable: int AppCompatTheme_actionModeSelectAllDrawable
 com.chwishay.chwsp00.R$attr: int panelMenuListWidth
 com.umeng.commonsdk.internal.utils.a: java.util.List n(android.content.Context)
 com.umeng.umcrash.R$attr: int menu
-com.chwshay.commonlib.baseApp.BaseApp
+com.chwishay.commonlib.baseComp.BaseApp
 com.umeng.commonsdk.statistics.common.MLog: void w(java.lang.String,java.lang.Object[])
 com.umeng.analytics.pro.z: boolean e()
 com.chwishay.chwsp00.R$drawable: int notification_bg_low_pressed
@@ -3127,7 +3127,7 @@ androidx.appcompat.R$dimen: int abc_text_size_menu_header_material
 com.umeng.analytics.b: void a(double,double)
 com.umeng.commonsdk.statistics.common.ULog: void e(java.lang.String)
 com.chwishay.chwsp00.R$dimen: int tooltip_precise_anchor_threshold
-com.chwshay.commonlib.baseApp.BaseApp: BaseApp()
+com.chwishay.commonlib.baseComp.BaseApp: BaseApp()
 com.chwishay.chwsp00.R$drawable: int abc_item_background_holo_dark
 androidx.appcompat.R$styleable: int AppCompatTheme_actionBarSplitStyle
 com.chwishay.chwsp00.baseComponent.BaseActivity: BaseActivity()

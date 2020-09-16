@@ -47,6 +47,7 @@ public class HexUtil {
         if (data == null || offset + 4 > data.length) {
             throw new IllegalArgumentException("传入参数不正确");
         } else {
+            //大端模式解析
             int l = data[offset + 3];
             l &= 0xff;
             l |= ((long) data[offset + 2] << 8);

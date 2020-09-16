@@ -1,4 +1,4 @@
-package com.chwshay.commonlib.baseApp
+package com.chwishay.commonlib.baseComp
 
 import android.app.Application
 
