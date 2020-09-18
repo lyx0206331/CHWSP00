@@ -36,7 +36,7 @@ import kotlin.concurrent.thread
  * description:
  */
 class BleDeviceInfo(val bleDevice: BleDevice) {
-    var startTime = 0L
+    var lastCalTime = 0L
     var speed: Int = 0
     var totalSize: Int = 0
 
@@ -47,13 +47,13 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
     var lastDataSize = 0
         set(value) {
             field = value
-            val timeLen = System.currentTimeMillis() - startTime
-            if (startTime == 0L) {
-                startTime = System.currentTimeMillis()
+            val timeLen = System.currentTimeMillis() - lastCalTime
+            if (lastCalTime == 0L) {
+                lastCalTime = System.currentTimeMillis()
                 lastSecondTotalSize = 0
                 speed = 0
             } else if (timeLen >= 1000) {
-                startTime = System.currentTimeMillis()
+                lastCalTime = System.currentTimeMillis()
                 speed = ((totalSize - lastSecondTotalSize) / (timeLen / 1000f)).toInt()
                 lastSecondTotalSize = totalSize
             }
@@ -65,15 +65,29 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
         set(value) {
             field = value
             lastDataSize = field?.size.orDefault()
-            if (needSave && !fileName.isNullOrEmpty()) {
-                writeStr2File(fileName!!, field, true)
-                writeStr2File(fileName!!, field, false)
+            if (needSave) {
+                writeStr2File(fileName, field, true)
+                writeStr2File(fileName, field, false)
             }
         }
 
     //是否需要保存
     var needSave = false
-    var fileName: String? = null
+        set(value) {
+            field = value
+            if (field) {
+                startSaveTime = System.currentTimeMillis()
+            } else {
+                stopSaveTime = System.currentTimeMillis()
+            }
+        }
+    var startSaveTime = 0L
+    var stopSaveTime = 0L
+    var fileName: String = "${System.currentTimeMillis()}"
+        set(value) {
+            field = "${value}_$startSaveTime"
+        }
+    var filePath: String? = null
 
     /**
      * 保存原始文件
@@ -121,6 +135,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             }
 //            "DATA".logE("$content")
             val file = checkFileExists(if (isSrc) "${fileName}_src" else "${fileName}_rst")
+            if (!isSrc) filePath = file.absolutePath
             BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).apply {
                 write(content)
                 close()

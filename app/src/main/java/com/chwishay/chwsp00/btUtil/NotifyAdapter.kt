@@ -12,6 +12,7 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chwishay.chwsp00.R
+import com.chwishay.chwsp00.activity.ReportActivity
 import com.chwishay.chwsp00.model.BleDeviceInfo
 import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.showShortToast
@@ -19,10 +20,13 @@ import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleNotifyCallback
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.utils.HexUtil
+import com.example.alglibrary.AlgUtil
 import org.jetbrains.anko.find
 import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import java.io.File
+import kotlin.concurrent.thread
 
 //                       _ooOoo_
 //                      o8888888o
@@ -60,6 +64,7 @@ class NotifyAdapter(val context: Context) :
         val switchNotify = itemView.find<Switch>(R.id.switchNotify)
         val etFileName = itemView.find<EditText>(R.id.etFileName)
         val btnSave = itemView.find<Button>(R.id.btnSave)
+        val btnBuildReport = itemView.find<Button>(R.id.btnBuildReport)
         val btnClear = itemView.find<Button>(R.id.btnClear)
         val tvData = itemView.find<TextView>(R.id.tvData)
             .apply { movementMethod = ScrollingMovementMethod.getInstance() }
@@ -81,7 +86,7 @@ class NotifyAdapter(val context: Context) :
         val bleDeviceInfo = devices?.get(position)
         bleDeviceInfo?.bleDevice?.apply {
             holder.tvDevName.text = "$name($mac)"
-            BleManager.getInstance().getBluetoothGatt(this).services.let {
+            BleManager.getInstance().getBluetoothGatt(this)?.services?.let {
                 it.forEachIndexed { index, bluetoothGattService ->
                     if (index == it.size - 1) {
                         bluetoothGattService.characteristics.forEach { gattCharacteristic ->
@@ -145,6 +150,27 @@ class NotifyAdapter(val context: Context) :
                                         }
                                     }
                                 }
+                                holder.btnBuildReport.onClick {
+                                    if (bleDeviceInfo.needSave || !File(bleDeviceInfo.filePath).exists()) {
+                                        context.showShortToast("请先保存数据")
+                                        return@onClick
+                                    } else {
+                                        thread {
+                                            val algUtil = AlgUtil()
+                                            val data = algUtil.readFromTxt(bleDeviceInfo.filePath!!)
+                                            val result = algUtil.getTestData(data, 18)
+                                            context.runOnUiThread {
+                                                ReportActivity.startActivity(
+                                                    context,
+                                                    bleDeviceInfo.stopSaveTime - bleDeviceInfo.startSaveTime,
+                                                    result.distance,
+                                                    result.stepArray,
+                                                    result.stepCount
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
                                 holder.btnClear.onClick {
                                     bleDeviceInfo.totalSize = 0
                                     holder.tvData.text = ""
@@ -172,7 +198,7 @@ class NotifyAdapter(val context: Context) :
                 append("\n")
                 val offset = lineCount * lineHeight
                 if (offset > height) {
-                    tv.scrollTo(0, offset - height)
+                    scrollTo(0, offset - height)
                 }
             }
         }

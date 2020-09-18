@@ -57,7 +57,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="保存到文件:" />
+                    android:text="保存文件:" />
 
                 <EditText
                     android:id="@+id/etFileName"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:textSize="14sp"
-                    android:hint="请输入文件名" />
+                    android:hint="文件名" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -77,16 +77,24 @@
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="5dp"
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:text="开始保存" />
+
+                <Button
+                    android:id="@+id/btnBuildReport"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="报告" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/btnClear"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
                 android:gravity="center"
                 android:text="清空" />
         </TableRow>

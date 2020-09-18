@@ -87,8 +87,8 @@ data class RecordDetailData @JvmOverloads constructor(
 
     //测试路程(m)
     @ColumnInfo var distance: Float = 0f,
-    //测试时间(mm)
-    @ColumnInfo var time: Int = 0,
+    //测试时长(min)
+    @ColumnInfo(name = "time_length") var timeLength: Int = 0,
     //总步数(步)
     @ColumnInfo(name = "step_count") var stepCount: Int = 0,
     //平均步速(m/s)
