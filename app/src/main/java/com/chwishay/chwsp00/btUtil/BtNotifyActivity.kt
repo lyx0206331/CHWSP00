@@ -1,5 +1,6 @@
 package com.chwishay.chwsp00.btUtil
 
+import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,10 +12,16 @@ import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.model.BleDeviceInfo
 import com.chwishay.chwsp00.utils.Observer
 import com.chwishay.chwsp00.utils.ObserverManager
+import com.chwishay.commonlib.tools.formatHexString
+import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
+import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
+import com.clj.fastble.exception.BleException
+import com.clj.fastble.utils.HexUtil
 import kotlinx.android.synthetic.main.activity_bt_notify.*
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class BtNotifyActivity : BaseActivity(), Observer {
 
@@ -54,6 +61,46 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     override fun initViews() {
+        btnSend.onClick {
+            if (etInputCmd.text.isNullOrEmpty()) {
+                showShortToast("请输入十六进制指令")
+                return@onClick
+            } else {
+                val cmd = etInputCmd.text.toString()
+                devices?.forEach {
+                    BleManager.getInstance().getBluetoothGatt(it).services.let { service ->
+                        service[service.size - 1].characteristics.forEach { characteristic ->
+                            if (characteristic.properties.and(BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) > 0) {
+                                "BLE".logE("serviceUUID:${characteristic.service.uuid}\n characteristicUUID:${characteristic.uuid}")
+                                BleManager.getInstance().write(it,
+                                    characteristic.service.uuid.toString(),
+                                    characteristic.uuid.toString(),
+                                    HexUtil.hexStringToBytes(cmd),
+                                    object : BleWriteCallback() {
+                                        override fun onWriteSuccess(
+                                            current: Int,
+                                            total: Int,
+                                            justWrite: ByteArray?
+                                        ) {
+                                            showShortToast(
+                                                "向${it.name}发送指令${
+                                                    justWrite?.formatHexString(
+                                                        " "
+                                                    )
+                                                }成功"
+                                            )
+                                        }
+
+                                        override fun onWriteFailure(exception: BleException?) {
+                                            showShortToast("向${it.name}发送指令失败:${exception.toString()}")
+                                        }
+                                    })
+                            }
+                        }
+                    }
+                }
+            }
+        }
         rvNotify.adapter = adapter
         adapter.devices = getDeviceInfos()
         //处理RecyclerView内外滑动冲突问题

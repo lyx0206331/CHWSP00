@@ -59,6 +59,7 @@ class NotifyAdapter(val context: Context) :
 
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvDevName = itemView.findViewById<TextView>(R.id.tvDeviceName)
+        val tvReceiveTimeLen = itemView.find<TextView>(R.id.tvReceiveTimeLen)
         val tvReceiveSpeed = itemView.find<TextView>(R.id.tvReceiveSpeed)
         val tvTotalData = itemView.find<TextView>(R.id.tvTotalData)
         val switchNotify = itemView.find<Switch>(R.id.switchNotify)
@@ -94,6 +95,7 @@ class NotifyAdapter(val context: Context) :
                                 holder.switchNotify.onCheckedChange { buttonView, isChecked ->
                                     holder.etFileName.isEnabled = !isChecked
                                     if (isChecked) {
+                                        bleDeviceInfo.startReceive()
                                         BleManager.getInstance().notify(
                                             this@apply,
                                             gattCharacteristic.service.uuid.toString(),
@@ -121,6 +123,9 @@ class NotifyAdapter(val context: Context) :
                                                 }
                                             })
                                     } else {
+                                        bleDeviceInfo.stopReceive()
+                                        holder.tvReceiveTimeLen.text =
+                                            "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
                                         BleManager.getInstance().stopNotify(
                                             this@apply,
                                             gattCharacteristic.service.uuid.toString(),
@@ -147,6 +152,8 @@ class NotifyAdapter(val context: Context) :
                                         } else {
                                             context.showShortToast("停止保存数据")
                                             holder.btnSave.text = "开始保存"
+                                            holder.tvReceiveTimeLen.text =
+                                                "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
                                         }
                                     }
                                 }
@@ -162,7 +169,7 @@ class NotifyAdapter(val context: Context) :
                                             context.runOnUiThread {
                                                 ReportActivity.startActivity(
                                                     context,
-                                                    bleDeviceInfo.stopSaveTime - bleDeviceInfo.startSaveTime,
+                                                    bleDeviceInfo.totalReceiveTime,
                                                     result.distance,
                                                     result.stepArray,
                                                     result.stepCount

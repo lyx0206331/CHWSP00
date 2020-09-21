@@ -71,23 +71,52 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             }
         }
 
-    //是否需要保存
+    //是否需要保存记录
     var needSave = false
         set(value) {
             field = value
             if (field) {
                 startSaveTime = System.currentTimeMillis()
+                totalReceiveTime = 0L
             } else {
                 stopSaveTime = System.currentTimeMillis()
             }
         }
-    var startSaveTime = 0L
-    var stopSaveTime = 0L
+    private var startSaveTime = 0L
+    private var stopSaveTime = 0L
     var fileName: String = "${System.currentTimeMillis()}"
         set(value) {
             field = "${value}_$startSaveTime"
         }
     var filePath: String? = null
+
+    //数据总接收时长，数据保存记录状态下，只累计接收数据时段时长，但每次重新保存记录会清零(ms)
+    var totalReceiveTime = 0L
+
+    //开始接收数据时间(ms)
+    private var startReceiveTime = 0L
+
+    //停止接收数据时间(ms)
+    private var stopReceiveTime = 0L
+
+    /**
+     * 开始接收数据
+     */
+    fun startReceive() {
+        startReceiveTime = System.currentTimeMillis()
+    }
+
+    /**
+     * 停止接收数据
+     */
+    fun stopReceive() {
+        stopReceiveTime = System.currentTimeMillis()
+        if (startReceiveTime <= 0L) {
+            throw IllegalStateException("请先调用startReceive()方法开始接收数据")
+        } else {
+            totalReceiveTime += stopReceiveTime - startReceiveTime
+        }
+    }
 
     /**
      * 保存原始文件

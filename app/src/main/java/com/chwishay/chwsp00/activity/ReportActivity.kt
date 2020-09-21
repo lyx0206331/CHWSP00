@@ -56,6 +56,7 @@ class ReportActivity : BaseActivity() {
     }
 
     override fun initViews() {
+        toolbar.setNavigationOnClickListener { finish() }
         tvTestTimeLength.text = "${timeLength}s"
         tvTestDistance.text = "${distance}m"
         tvTestStepCount.text = "${stepCount}步"

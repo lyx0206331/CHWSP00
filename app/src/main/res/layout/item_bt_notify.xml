@@ -31,6 +31,13 @@
         <TableRow>
 
             <TextView
+                android:id="@+id/tvReceiveTimeLen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="总接收时长:0ms" />
+
+            <TextView
                 android:id="@+id/tvReceiveSpeed"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -99,6 +99,9 @@ fun Date.formatDateString(
     locale: Locale = Locale.CHINESE
 ): String = SimpleDateFormat(formatStr, locale).format(this)
 
+/**
+ * 字节数组转换为浮点型(大端模式)
+ */
 fun ByteArray.read2FloatBE(offset: Int) =
     if (this == null || this.size < offset + 4) throw IllegalArgumentException("传入参数不正确")
     else java.lang.Float.intBitsToFloat(
@@ -108,6 +111,9 @@ fun ByteArray.read2FloatBE(offset: Int) =
             .or(0x000000ff.and(this[offset + 3].toInt()).toLong()).toInt()
     )
 
+/**
+ * 字节数组转换为浮点型(小端模式)
+ */
 fun ByteArray.read2FloatLE(offset: Int) =
     if (this == null || this.size < offset + 4) throw IllegalArgumentException("传入参数不正确")
     else java.lang.Float.intBitsToFloat(
@@ -116,3 +122,20 @@ fun ByteArray.read2FloatLE(offset: Int) =
             .or(0x0000ff00.and(this[offset + 1].toInt().shl(8)).toLong())
             .or(0x000000ff.and(this[offset].toInt()).toLong()).toInt()
     )
+
+/**
+ * 字节数组转换为字符串
+ * @param seperator 间隔符
+ */
+fun ByteArray?.formatHexString(seperator: String = ""): String? =
+    if (this == null || this.isEmpty()) {
+        null
+    } else {
+        val sb = StringBuilder()
+        this.forEach { item ->
+            var hex = Integer.toHexString(item.toInt().and(0xff))
+            if (hex.length == 1) hex = "0$this"
+            sb.append("$hex$seperator")
+        }
+        sb.toString().trim()
+    }
