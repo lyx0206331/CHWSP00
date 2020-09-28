@@ -57,7 +57,7 @@ class UncaughtCrashHandler : Thread.UncaughtExceptionHandler {
         if (!ifhandleException(e) && defaultHandler != null) {
             defaultHandler.uncaughtException(t, e)
         } else {
-            Thread.sleep(3000)
+            Thread.sleep(1000)
             android.os.Process.killProcess(android.os.Process.myPid())
             exitProcess(1)
         }
@@ -83,11 +83,6 @@ class UncaughtCrashHandler : Thread.UncaughtExceptionHandler {
         val writer = StringWriter()
         val printWriter = PrintWriter(writer)
         ex.printStackTrace(printWriter)
-        var exCause = ex.cause
-        while (exCause != null) {
-            exCause.printStackTrace(printWriter)
-            exCause = ex.cause
-        }
         printWriter.close()
 
         val fileName = "crash-${System.currentTimeMillis()}.log"

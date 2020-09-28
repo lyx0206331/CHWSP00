@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import com.chwishay.commonlib.BuildConfig
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -89,6 +90,9 @@ fun Context.showShortToast(@StringRes resId: Int) =
 fun Context.showLongToast(@StringRes resId: Int) =
     Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
 
+/**
+ * 格式化日期字符串
+ */
 fun Long.formatDateString(
     formatStr: String = DateFormatStr.FORMAT_YMD_CN,
     locale: Locale = Locale.CHINESE
@@ -138,4 +142,55 @@ fun ByteArray?.formatHexString(seperator: String = ""): String? =
             sb.append("$hex$seperator")
         }
         sb.toString().trim()
+    }
+
+/**
+ * 十六进制字符串转字节数组
+ */
+fun String?.hexString2Bytes(): ByteArray? =
+    if (this.isNullOrEmpty() || !this.isHexString()) null
+    else {
+        val src = this.trim().toUpperCase()
+        val len = src.length / 2
+        val result = ByteArray(len) { 0 }
+        val hexChars = src.toCharArray()
+        for (i in 0 until len) {
+            val pos = i * 2
+            result[i] = (hexChars[pos].char2Byte().toInt().shl(4)
+                .or(hexChars[pos + 1].char2Byte().toInt())).toByte()
+        }
+        result
+    }
+
+/**
+ * 字符转字节
+ */
+fun Char.char2Byte() = "0123456789ABCDEF".indexOf(this).toByte()
+
+/**
+ * 判断是否十六进制字符串
+ */
+fun String?.isHexString() =
+    if (this.isNullOrEmpty()) false
+    else {
+        Pattern.compile("^[0-9A-Fa-f]+$").matcher(this).matches()
+    }
+
+/**
+ * 判断是否邮箱地址
+ */
+fun String?.isEmailString() =
+    if (this.isNullOrEmpty()) false
+    else {
+        Pattern.compile("^[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]\$")
+            .matcher(this).matches()
+    }
+
+/**
+ * 判断是否Wi-Fi SSID
+ */
+fun String?.isSsidString() =
+    if (this.isNullOrEmpty()) false
+    else {
+        Pattern.compile("^[A-Za-z]+[\\w\\-\\:\\.]*\$").matcher(this).matches()
     }

@@ -18,7 +18,7 @@
         android:layout_margin="5dp"
         android:orientation="horizontal">
 
-        <EditText
+        <!--<EditText
             android:id="@+id/etInputCmd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,7 +32,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="发送" />
+            android:text="发送" />-->
+
+        <Button
+            android:id="@+id/btnSyncData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:layout_marginRight="10dp"
+            android:text="同步数据" />
+
+        <Button
+            android:id="@+id/btnStopCollect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="停止采集" />
     </LinearLayout>
 
     <View

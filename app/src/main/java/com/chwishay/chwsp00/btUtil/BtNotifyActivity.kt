@@ -1,6 +1,5 @@
 package com.chwishay.chwsp00.btUtil
 
-import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,19 +12,31 @@ import com.chwishay.chwsp00.model.BleDeviceInfo
 import com.chwishay.chwsp00.utils.Observer
 import com.chwishay.chwsp00.utils.ObserverManager
 import com.chwishay.commonlib.tools.formatHexString
-import com.chwishay.commonlib.tools.logE
+import com.chwishay.commonlib.tools.hexString2Bytes
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
-import com.clj.fastble.utils.HexUtil
 import kotlinx.android.synthetic.main.activity_bt_notify.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class BtNotifyActivity : BaseActivity(), Observer {
 
     companion object {
+
+        //ble设备服务UUID
+        const val SERVICE_UUID = "8653000a-43e6-47b7-9cb0-5fc21d4ae340"
+
+        //ble设备特征值UUID
+        const val CHARACTERISTICS_UUID = "8653000c-43e6-47b7-9cb0-5fc21d4ae340"
+
+        //同步数据命令
+        const val CMD_SYNC_DATA = "5A"
+
+        //停止采集命令
+        const val CMD_STOP_COLLECT = "AA"
+
         @JvmStatic
         fun startActivity(context: Context, devices: ArrayList<BleDevice>) {
             val intent = Intent(context, BtNotifyActivity::class.java)
@@ -61,45 +72,11 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     override fun initViews() {
-        btnSend.onClick {
-            if (etInputCmd.text.isNullOrEmpty()) {
-                showShortToast("请输入十六进制指令")
-                return@onClick
-            } else {
-                val cmd = etInputCmd.text.toString()
-                devices?.forEach {
-                    BleManager.getInstance().getBluetoothGatt(it).services.let { service ->
-                        service[service.size - 1].characteristics.forEach { characteristic ->
-                            if (characteristic.properties.and(BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) > 0) {
-                                "BLE".logE("serviceUUID:${characteristic.service.uuid}\n characteristicUUID:${characteristic.uuid}")
-                                BleManager.getInstance().write(it,
-                                    characteristic.service.uuid.toString(),
-                                    characteristic.uuid.toString(),
-                                    HexUtil.hexStringToBytes(cmd),
-                                    object : BleWriteCallback() {
-                                        override fun onWriteSuccess(
-                                            current: Int,
-                                            total: Int,
-                                            justWrite: ByteArray?
-                                        ) {
-                                            showShortToast(
-                                                "向${it.name}发送指令${
-                                                    justWrite?.formatHexString(
-                                                        " "
-                                                    )
-                                                }成功"
-                                            )
-                                        }
-
-                                        override fun onWriteFailure(exception: BleException?) {
-                                            showShortToast("向${it.name}发送指令失败:${exception.toString()}")
-                                        }
-                                    })
-                            }
-                        }
-                    }
-                }
-            }
+        btnSyncData.onClick {
+            sendCmd(CMD_SYNC_DATA)
+        }
+        btnStopCollect.onClick {
+            sendCmd(CMD_STOP_COLLECT)
         }
         rvNotify.adapter = adapter
         adapter.devices = getDeviceInfos()
@@ -119,6 +96,28 @@ class BtNotifyActivity : BaseActivity(), Observer {
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
             }
         })
+    }
+
+    private fun sendCmd(cmd: String) {
+        devices?.forEach {
+            BleManager.getInstance().write(it,
+                SERVICE_UUID,
+                CHARACTERISTICS_UUID,
+                cmd.hexString2Bytes(),
+                object : BleWriteCallback() {
+                    override fun onWriteSuccess(
+                        current: Int,
+                        total: Int,
+                        justWrite: ByteArray?
+                    ) {
+                        showShortToast("向${it.name}发送指令${justWrite?.formatHexString(" ")}成功,时间:${System.currentTimeMillis()}")
+                    }
+
+                    override fun onWriteFailure(exception: BleException?) {
+                        showShortToast("向${it.name}发送指令失败:${exception.toString()}")
+                    }
+                })
+        }
     }
 
     override fun loadData() {
