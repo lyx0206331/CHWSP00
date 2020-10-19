@@ -46,7 +46,11 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     private val adapter by lazy {
-        NotifyAdapter(this)
+        NotifyAdapter(this) {
+            if (!it.isNullOrEmpty() && it.size > 1) {
+                btnSyncData.text = "同步数据(时差:${kotlin.math.abs(it[1].syncTime - it[0].syncTime)})"
+            }
+        }
     }
 
     private var devices: ArrayList<BleDevice>? = null

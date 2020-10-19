@@ -54,11 +54,12 @@ import kotlin.concurrent.thread
  * date:2020/9/8 0008 16:23
  * description:
  */
-class NotifyAdapter(val context: Context) :
+class NotifyAdapter(val context: Context, val callback: (ArrayList<BleDeviceInfo>?) -> Unit) :
     RecyclerView.Adapter<NotifyAdapter.NotifyViewHolder>() {
 
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvDevName = itemView.findViewById<TextView>(R.id.tvDeviceName)
+        val tvSyncTime = itemView.find<TextView>(R.id.tvSyncTime)
         val tvReceiveTimeLen = itemView.find<TextView>(R.id.tvReceiveTimeLen)
         val tvReceiveSpeed = itemView.find<TextView>(R.id.tvReceiveSpeed)
         val tvTotalData = itemView.find<TextView>(R.id.tvTotalData)
@@ -112,6 +113,9 @@ class NotifyAdapter(val context: Context) :
                                                 override fun onCharacteristicChanged(data: ByteArray?) {
                                                     val data = gattCharacteristic.value
                                                     bleDeviceInfo.lastData = data
+                                                    holder.tvSyncTime.text =
+                                                        "系统时间:${bleDeviceInfo.syncTime}ms"
+                                                    callback.invoke(devices)
                                                     holder.tvReceiveSpeed.text =
                                                         "${bleDeviceInfo.speed}byte/s"
                                                     holder.tvTotalData.text =

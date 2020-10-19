@@ -36,15 +36,15 @@
         <activity android:name=".activity.LineChartActivity" />
         <activity android:name=".btUtil.BtTestActivity" />
         <activity android:name=".activity.ChartActivity" />
-        <activity android:name=".activity.MainTestActivity">
+        <activity
+            android:name=".activity.MainTestActivity"
+            android:label="P00TestEntry">
 
-            <!--
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            </intent-filter>-->
         </activity>
     </application>
 

@@ -4,6 +4,7 @@ import android.os.Environment
 import android.util.Log
 import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.read2FloatBE
+import com.chwishay.commonlib.tools.read2LongLE
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
 import java.io.*
@@ -60,11 +61,18 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             totalSize += field
         }
 
+    var syncTime = 0L
+
     //最后一次传输数据
     var lastData: ByteArray? = null
         set(value) {
             field = value
             lastDataSize = field?.size.orDefault()
+            if (lastDataSize == 7 && field!![0] == 0xFB.toByte() && field!![1] == 0xFF.toByte()) {
+                field!!.copyOfRange(2, 6).apply {
+                    syncTime = this.read2LongLE()
+                }
+            }
             if (needSave) {
                 writeStr2File(fileName, field, true)
                 writeStr2File(fileName, field, false)
@@ -137,7 +145,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
      * 保存十六进制字符串文件
      */
     private fun writeStr2File(fileName: String, data: ByteArray?, isSrc: Boolean = true) {
-        if (data == null) return
+        if (data == null/* || (data[0] != 0xfa.toByte() && data[1] != 0xff.toByte())*/) return
         thread {
 
             val content = if (isSrc) "${HexUtil.formatHexString(data, true)}\n" else {
