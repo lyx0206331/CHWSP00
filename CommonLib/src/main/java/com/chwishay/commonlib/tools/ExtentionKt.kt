@@ -127,6 +127,13 @@ fun ByteArray.read2FloatLE(offset: Int = 0) =
             .or(0x000000ff.and(this[offset].toInt()).toLong()).toInt()
     )
 
+fun Int.toBytesLE() =
+    byteArrayOf(this.toByte(), this.shr(8).toByte(), this.shr(16).toByte(), this.shr(24).toByte())
+
+fun Short.toBytesLE() = byteArrayOf(this.toByte(), this.toInt().shr(8).toByte())
+
+fun Short.toBytesBE() = byteArrayOf(this.toInt().shr(8).toByte(), this.toByte())
+
 /**
  * 字节数组转换为整型(大端模式)
  */

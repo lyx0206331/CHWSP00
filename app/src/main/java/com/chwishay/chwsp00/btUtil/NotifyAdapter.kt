@@ -59,7 +59,7 @@ class NotifyAdapter(val context: Context, val callback: (ArrayList<BleDeviceInfo
 
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvDevName = itemView.findViewById<TextView>(R.id.tvDeviceName)
-        val tvSyncTime = itemView.find<TextView>(R.id.tvSyncTime)
+        val tvSysTime = itemView.find<TextView>(R.id.tvSysTime)
         val tvReceiveTimeLen = itemView.find<TextView>(R.id.tvReceiveTimeLen)
         val tvReceiveSpeed = itemView.find<TextView>(R.id.tvReceiveSpeed)
         val tvTotalData = itemView.find<TextView>(R.id.tvTotalData)
@@ -113,8 +113,8 @@ class NotifyAdapter(val context: Context, val callback: (ArrayList<BleDeviceInfo
                                                 override fun onCharacteristicChanged(data: ByteArray?) {
                                                     val data = gattCharacteristic.value
                                                     bleDeviceInfo.lastData = data
-                                                    holder.tvSyncTime.text =
-                                                        "系统时间:${bleDeviceInfo.syncTime}ms"
+                                                    holder.tvSysTime.text =
+                                                        "系统时间:${bleDeviceInfo.sysTime}ms"
                                                     callback.invoke(devices)
                                                     holder.tvReceiveSpeed.text =
                                                         "${bleDeviceInfo.speed}byte/s"

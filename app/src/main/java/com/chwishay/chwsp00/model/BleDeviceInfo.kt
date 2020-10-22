@@ -62,6 +62,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
         }
 
     var syncTime = 0L
+    var sysTime = 0L
 
     //最后一次传输数据
     var lastData: ByteArray? = null
@@ -70,7 +71,8 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             lastDataSize = field?.size.orDefault()
             if (lastDataSize == 7 && field!![0] == 0xFB.toByte() && field!![1] == 0xFF.toByte()) {
                 field!!.copyOfRange(2, 6).apply {
-                    syncTime = this.read2LongLE()
+                    sysTime = this.read2LongLE()
+                    syncTime = sysTime
                 }
             }
             if (needSave) {
