@@ -1,12 +1,12 @@
 package com.chwishay.chwsp00.activity
 
 import android.Manifest
+import android.os.Environment
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.views.LoadingDialog
-import com.chwishay.commonlib.tools.CommUtil
-import com.chwishay.commonlib.tools.PermissionUtil
+import com.chwishay.commonlib.tools.*
 import kotlinx.android.synthetic.main.activity_main_test.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -35,6 +35,17 @@ class MainTestActivity : BaseActivity() {
         btnTestChart.setOnClickListener { /*permissionUtil.requestPermission()*/ChartActivity.startActivity(
             this
         )
+        }
+        btnSave2Excel.setOnClickListener {
+            val data = arrayListOf<TestModel>().apply {
+                for (i in 0..99) {
+                    add(TestModel("name$i", i, if (i % 2 == 0) "男" else "女"))
+                }
+            }
+            val dir =
+                FileUtil.getDiretory("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/Test").absolutePath
+            ExcelUtil.instance.initExcel("$dir/test.xls", "testSheet", arrayOf("姓名", "年龄", "性别"))
+                .export2Excel(data)
         }
         btnTestBt.onClick {
             permissionUtil.requestPermission(

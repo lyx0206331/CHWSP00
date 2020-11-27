@@ -1,5 +1,7 @@
 package com.chwishay.commonlib.tools
 
+import java.io.File
+
 //                       _ooOoo_
 //                      o8888888o
 //                      88" . "88
@@ -27,4 +29,23 @@ package com.chwishay.commonlib.tools
  * description:
  */
 object FileUtil {
+
+    fun getFile(fileName: String, delOld: Boolean = false): File {
+        val file = File(fileName)
+        if (delOld && file.isFile) {
+            file.deleteOnExit()
+        }
+        if (!file.exists() || !file.isFile) {
+            file.createNewFile()
+        }
+        return file
+    }
+
+    fun getDiretory(dirName: String): File {
+        val file = File(dirName)
+        if (!file.exists() || !file.isDirectory) {
+            file.mkdirs()
+        }
+        return file
+    }
 }

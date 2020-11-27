@@ -39,7 +39,16 @@
         android:layout_height="wrap_content"
         android:text="testBt"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btnSave2Excel"
         app:layout_constraintLeft_toRightOf="@id/btnTestChart" />
+
+    <Button
+        android:id="@+id/btnSave2Excel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="save2Excel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/btnTestBt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

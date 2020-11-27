@@ -25,11 +25,15 @@ android {
 
         lintOptions { abortOnError false }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0"
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20'
     implementation rootProject.ext.dependencies.androidXAppcompat
     implementation rootProject.ext.dependencies.androidXConstraintLayout
     implementation rootProject.ext.dependencies.androidXCore

@@ -109,7 +109,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
             }
         }
         btnStopCollect.onClick {
-            sendSyncCmd(CMD_STOP_COLLECT)
+            sendCollectCmd(CMD_STOP_COLLECT)
         }
         rvNotify.adapter = adapter
         adapter.devices = getDeviceInfos()
@@ -132,6 +132,13 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     private fun sendSyncCmd(cmd: ByteArray) {
+        adapter.devices?.get(0)?.let {
+            it.sysTime = 0L
+            sendCmd(it.bleDevice, cmd)
+        }
+    }
+
+    private fun sendCollectCmd(cmd: ByteArray) {
         adapter.devices?.forEach {
             it.sysTime = 0L
             sendCmd(it.bleDevice, cmd)

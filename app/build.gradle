@@ -116,7 +116,7 @@ dependencies {
     implementation rootProject.ext.dependencies.androidXRoomRuntime
     implementation project(path: ':FastBleLib')
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     annotationProcessor rootProject.ext.dependencies.androidXRoomCompiler
     implementation rootProject.ext.dependencies.androidXRoomKTX
     implementation project(path: ':CommonLib')
