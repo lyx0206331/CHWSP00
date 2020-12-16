@@ -78,6 +78,8 @@ class NotifyAdapter(val context: Context, val callback: (ArrayList<BleDeviceInfo
             notifyDataSetChanged()
         }
 
+    var dataIndex = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotifyViewHolder {
         return NotifyViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_bt_notify, parent, false)
@@ -111,6 +113,9 @@ class NotifyAdapter(val context: Context, val callback: (ArrayList<BleDeviceInfo
                                                 }
 
                                                 override fun onCharacteristicChanged(data: ByteArray?) {
+                                                    if (dataIndex++ < 10) {
+                                                        return
+                                                    }
                                                     val data = gattCharacteristic.value
                                                     bleDeviceInfo.lastData = data
                                                     holder.tvSysTime.text =

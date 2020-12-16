@@ -2,6 +2,7 @@ package com.chwishay.chwsp00.model
 
 import android.os.Environment
 import android.util.Log
+import com.chwishay.commonlib.tools.formatDateString
 import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.read2FloatBE
 import com.chwishay.commonlib.tools.read2LongLE
@@ -94,9 +95,9 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
         }
     private var startSaveTime = 0L
     private var stopSaveTime = 0L
-    var fileName: String = "${System.currentTimeMillis()}"
+    var fileName: String = "${System.currentTimeMillis().formatDateString("yyyy-MM-dd-HH_mm_ss")}"
         set(value) {
-            field = "${value}_$startSaveTime"
+            field = "${value}_${startSaveTime.formatDateString("yyyy-MM-dd-HH_mm_ss")}"
         }
     var filePath: String? = null
 
@@ -175,9 +176,8 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
 //            "DATA".logE("$content")
             val file = checkFileExists(if (isSrc) "${fileName}_src" else "${fileName}_rst")
             if (!isSrc) filePath = file.absolutePath
-            BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).apply {
-                write(content)
-                close()
+            BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).use {
+                it.write(content)
             }
         }
     }

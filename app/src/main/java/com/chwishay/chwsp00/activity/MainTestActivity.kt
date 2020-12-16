@@ -9,6 +9,9 @@ import com.chwishay.chwsp00.views.LoadingDialog
 import com.chwishay.commonlib.tools.*
 import kotlinx.android.synthetic.main.activity_main_test.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.toast
+import java.io.File
+import kotlin.concurrent.thread
 
 class MainTestActivity : BaseActivity() {
 
@@ -36,17 +39,53 @@ class MainTestActivity : BaseActivity() {
             this
         )
         }
+        //region +哈哈
         btnSave2Excel.setOnClickListener {
-            val data = arrayListOf<TestModel>().apply {
-                for (i in 0..99) {
-                    add(TestModel("name$i", i, if (i % 2 == 0) "男" else "女"))
+
+            //region +折叠
+            thread {
+                //行优先测试
+//                    val data = arrayListOf<List<String>>().also {
+//                        for (i in 0..999) {
+//                            it.add(arrayListOf("name$i", "$i", if (i % 2 == 0) "男" else "女"))
+//                        }
+//                    }
+                //列优先测试
+                val data = arrayListOf<List<String>>().also { sheets ->
+                    sheets.add(arrayListOf<String>().also {
+                        for (i in 0..999) {
+                            it.add("name$i")
+                        }
+                    })
+                    sheets.add(arrayListOf<String>().also {
+                        for (i in 0..999) {
+                            it.add("$i 岁")
+                        }
+                    })
+                    sheets.add(arrayListOf<String>().also {
+                        for (i in 0..999) {
+                            it.add(if (i % 2 == 0) "男" else "女")
+                        }
+                    })
+                }
+                val fileName =
+                    File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/export/")
+                        .also { it.mkdirs() }
+                        .let { "${it.absolutePath}/${System.currentTimeMillis()}.xls" }
+                ExcelUtil.instance.setFileInfo(
+                    fileName, arrayOf("testSheet0", "testSheet1", "testSheet2"), arrayOf(
+                        arrayOf("姓名", "年龄", "性别"), null, arrayOf("abc", "def")
+                    )
+                )
+                    .exportColFirst(arrayListOf(data, data, data))
+//                    .insertImageFile(0, 5, 0, File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/export/10018_zhaoyun_1608083881214.png"))
+                runOnUiThread {
+                    toast("已保存")
                 }
             }
-            val dir =
-                FileUtil.getDiretory("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/Test").absolutePath
-            ExcelUtil.instance.initExcel("$dir/test.xls", "testSheet", arrayOf("姓名", "年龄", "性别"))
-                .export2Excel(data)
+            //endregion
         }
+        //endregion
         btnTestBt.onClick {
             permissionUtil.requestPermission(
                 permissions2,

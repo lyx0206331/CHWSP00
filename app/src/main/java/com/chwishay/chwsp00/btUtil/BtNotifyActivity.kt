@@ -90,6 +90,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
 
     override fun initViews() {
         btnSyncData.onClick {
+            adapter.dataIndex = 0
             sendSyncCmd(CMD_SYNC_DATA)
         }
         btnTimeCompensation.onClick {
