@@ -32,9 +32,23 @@
 
             <TextView
                 android:id="@+id/tvSysTime"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.0"
                 android:text="同步时间:0ms" />
+
+            <TextView
+                android:id="@+id/tvPower"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="电量:100%" />
+
+            <TextView
+                android:id="@+id/tvRechargeState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="状态:" />
         </TableRow>
 
         <TableRow>
@@ -124,6 +138,12 @@
         android:padding="5dp"
         android:scrollbars="vertical"
         android:background="@drawable/shape_blue_stroke" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="5dp" />
 
     <View
         android:layout_width="match_parent"

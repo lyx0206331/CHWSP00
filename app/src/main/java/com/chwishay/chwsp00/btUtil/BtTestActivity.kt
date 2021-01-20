@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.content.Intent
+import android.text.TextUtils
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isInvisible
@@ -167,8 +168,12 @@ class BtTestActivity : BaseActivity() {
 
             override fun onScanning(bleDevice: BleDevice?) {
                 TAG.logE("${bleDevice.toString()}")
-                deviceAdapter.addDevice(bleDevice)
-                deviceAdapter.notifyDataSetChanged()
+                bleDevice?.let {
+                    if (!TextUtils.isEmpty(it.name) && it.name.startsWith("BLE_APP")) {
+                        deviceAdapter.addDevice(it)
+                        deviceAdapter.notifyDataSetChanged()
+                    }
+                }
             }
 
             override fun onScanFinished(scanResultList: MutableList<BleDevice>?) {

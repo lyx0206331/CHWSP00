@@ -11,7 +11,9 @@ import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.model.BleDeviceInfo
 import com.chwishay.chwsp00.utils.Observer
 import com.chwishay.chwsp00.utils.ObserverManager
-import com.chwishay.commonlib.tools.*
+import com.chwishay.commonlib.tools.CmdUtil
+import com.chwishay.commonlib.tools.logE
+import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
@@ -30,10 +32,16 @@ class BtNotifyActivity : BaseActivity(), Observer {
         const val CHARACTERISTICS_UUID = "8653000c-43e6-47b7-9cb0-5fc21d4ae340"
 
         //同步数据命令
-        val CMD_SYNC_DATA = byteArrayOf(0x5A)
+        val CMD_SYNC_DATA = byteArrayOf(
+            0xFA.toByte(), 0xFF.toByte(),
+            0xA3.toByte(), 0x01, 0x5A, 0x02
+        )
 
         //停止采集命令
-        val CMD_STOP_COLLECT = byteArrayOf(0xAA.toByte())
+        val CMD_STOP_COLLECT = byteArrayOf(
+            0xFA.toByte(), 0xFF.toByte(),
+            0xA4.toByte(), 0x01, 0xAA.toByte(), 0xB1.toByte()
+        )
 
         private var timeEquation = 0L
 
@@ -47,22 +55,23 @@ class BtNotifyActivity : BaseActivity(), Observer {
 
     private val adapter by lazy {
         NotifyAdapter(this) {
-            if (!it.isNullOrEmpty() && it.size > 1 && it[0].syncTime > 0 && it[1].syncTime > 0) {
-                timeEquation = kotlin.math.abs(it[1].syncTime - it[0].syncTime)
-                btnSyncData.text = "同步数据(时差:$timeEquation)"
-//                if (timeEquation >= 30) {
-//                    it?.minWith(Comparator { o1, o2 ->
-//                        (o1.syncTime - o2.syncTime).toInt()
-//                    })?.apply {
-//                        "cmd".logE("timeEqShort:${timeEquation.toShort()}, bytes:${timeEquation.toShort().toBytesLE().read2IntLE()}")
-//                        val timeEqBytes = timeEquation.toShort().toBytesLE()
-//                        val cmdBytes = byteArrayOf(0xA5.toByte(), *timeEqBytes, 0xA5.toByte())
-//                        sendCmd(bleDevice,cmdBytes)
-//                    }
-//                }
-//                it[0].syncTime = 0
-//                it[1].syncTime = 0
-            }
+            sendCmd(it.bleDevice, CmdUtil.getTimeSyncCmd())
+//            if (!it.isNullOrEmpty() && it.size > 1 && it[0].syncTime > 0 && it[1].syncTime > 0) {
+//                timeEquation = kotlin.math.abs(it[1].syncTime - it[0].syncTime)
+//                btnSyncData.text = "同步数据(时差:$timeEquation)"
+////                if (timeEquation >= 30) {
+////                    it?.minWith(Comparator { o1, o2 ->
+////                        (o1.syncTime - o2.syncTime).toInt()
+////                    })?.apply {
+////                        "cmd".logE("timeEqShort:${timeEquation.toShort()}, bytes:${timeEquation.toShort().toBytesLE().read2IntLE()}")
+////                        val timeEqBytes = timeEquation.toShort().toBytesLE()
+////                        val cmdBytes = byteArrayOf(0xA5.toByte(), *timeEqBytes, 0xA5.toByte())
+////                        sendCmd(bleDevice,cmdBytes)
+////                    }
+////                }
+////                it[0].syncTime = 0
+////                it[1].syncTime = 0
+//            }
         }
     }
 
@@ -89,28 +98,16 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     override fun initViews() {
+
         btnSyncData.onClick {
-            adapter.dataIndex = 0
-            sendSyncCmd(CMD_SYNC_DATA)
+//            adapter.dataIndex = 0
+            sendSyncCmd(/*CMD_SYNC_DATA*/CmdUtil.getStartSyncCmd())
         }
-        btnTimeCompensation.onClick {
-            if (devices?.size.orDefault() > 1 && timeEquation >= 10) {
-                adapter.devices?.minWith(Comparator { o1, o2 ->
-                    (o1.syncTime - o2.syncTime).toInt()
-                })?.apply {
-                    "cmd".logE(
-                        "timeEqShort:${timeEquation.toShort()}, bytes:${
-                            timeEquation.toShort().toBytesBE().read2IntLE()
-                        }"
-                    )
-                    val timeEqBytes = timeEquation.toShort().toBytesBE()
-                    val cmdBytes = byteArrayOf(0xA5.toByte(), *timeEqBytes, 0xA5.toByte())
-                    sendCmd(bleDevice, cmdBytes)
-                }
-            }
+        btnCheckTime.onClick {
+            checkTime()
         }
         btnStopCollect.onClick {
-            sendCollectCmd(CMD_STOP_COLLECT)
+            sendCollectCmd(/*CMD_STOP_COLLECT*/CmdUtil.getStopSyncCmd())
         }
         rvNotify.adapter = adapter
         adapter.devices = getDeviceInfos()
@@ -130,6 +127,17 @@ class BtNotifyActivity : BaseActivity(), Observer {
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
             }
         })
+
+//        checkTime()
+    }
+
+    /**
+     * 校正时间
+     */
+    private fun checkTime() {
+        adapter.devices?.forEach {
+            sendCmd(it.bleDevice, CmdUtil.getTimeSyncCmd())
+        }
     }
 
     private fun sendSyncCmd(cmd: ByteArray) {

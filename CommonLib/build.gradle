@@ -32,11 +32,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    api fileTree(dir: "libs", include: ["*.jar"])
     api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20'
     implementation rootProject.ext.dependencies.androidXAppcompat
     implementation rootProject.ext.dependencies.androidXConstraintLayout
     implementation rootProject.ext.dependencies.androidXCore
+
+    implementation rootProject.ext.dependencies.coroutinesCore
+    implementation rootProject.ext.dependencies.coroutinesAndroid
+    implementation rootProject.ext.dependencies.coroutinesJDK8
+
     testImplementation rootProject.ext.dependencies.androidXExtJUnit
     androidTestImplementation rootProject.ext.dependencies.androidXTestRunner
     androidTestImplementation rootProject.ext.dependencies.androidXTextEspressoCore

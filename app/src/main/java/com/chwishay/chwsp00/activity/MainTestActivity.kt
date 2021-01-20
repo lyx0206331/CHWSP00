@@ -2,16 +2,18 @@ package com.chwishay.chwsp00.activity
 
 import android.Manifest
 import android.os.Environment
+import androidx.lifecycle.lifecycleScope
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.views.LoadingDialog
 import com.chwishay.commonlib.tools.*
 import kotlinx.android.synthetic.main.activity_main_test.*
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.toast
 import java.io.File
-import kotlin.concurrent.thread
+import java.util.*
 
 class MainTestActivity : BaseActivity() {
 
@@ -43,7 +45,7 @@ class MainTestActivity : BaseActivity() {
         btnSave2Excel.setOnClickListener {
 
             //region +折叠
-            thread {
+            lifecycleScope.launch {
                 //行优先测试
 //                    val data = arrayListOf<List<String>>().also {
 //                        for (i in 0..999) {
@@ -51,37 +53,53 @@ class MainTestActivity : BaseActivity() {
 //                        }
 //                    }
                 //列优先测试
-                val data = arrayListOf<List<String>>().also { sheets ->
-                    sheets.add(arrayListOf<String>().also {
-                        for (i in 0..999) {
-                            it.add("name$i")
-                        }
-                    })
-                    sheets.add(arrayListOf<String>().also {
-                        for (i in 0..999) {
-                            it.add("$i 岁")
-                        }
-                    })
-                    sheets.add(arrayListOf<String>().also {
-                        for (i in 0..999) {
-                            it.add(if (i % 2 == 0) "男" else "女")
-                        }
-                    })
-                }
+//                val data = arrayListOf<List<String>>().also { sheets ->
+//                    sheets.add(arrayListOf<String>().also {
+//                        for (i in 0..999) {
+//                            it.add("name$i")
+//                        }
+//                    })
+//                    sheets.add(arrayListOf<String>().also {
+//                        for (i in 0..999) {
+//                            it.add("$i 岁")
+//                        }
+//                    })
+//                    sheets.add(arrayListOf<String>().also {
+//                        for (i in 0..999) {
+//                            it.add(if (i % 2 == 0) "男" else "女")
+//                        }
+//                    })
+//                }
                 val fileName =
                     File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/export/")
                         .also { it.mkdirs() }
                         .let { "${it.absolutePath}/${System.currentTimeMillis()}.xls" }
-                ExcelUtil.instance.setFileInfo(
-                    fileName, arrayOf("testSheet0", "testSheet1", "testSheet2"), arrayOf(
-                        arrayOf("姓名", "年龄", "性别"), null, arrayOf("abc", "def")
-                    )
-                )
-                    .exportColFirst(arrayListOf(data, data, data))
-//                    .insertImageFile(0, 5, 0, File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/export/10018_zhaoyun_1608083881214.png"))
-                runOnUiThread {
-                    toast("已保存")
+//                ExcelUtil.instance.setFileInfo(
+//                    fileName, arrayOf("testSheet0", "testSheet1", "testSheet2"), arrayOf(
+//                        arrayOf("姓名", "年龄", "性别"), null, arrayOf("abc", "def")
+//                    )
+//                )
+//                    .exportColFirst(arrayListOf(data, data, data))
+                //单元素列表测试
+                val data = arrayListOf<ExcelUtil.ExcelItem>().also {
+                    for (row in 0..99) {
+                        for (col in 0..99) {
+                            it.add(ExcelUtil.ExcelItem(row, col, "$row * $col = ${row * col}"))
+                        }
+                    }
                 }
+
+                ExcelUtil.instance.setFileInfo(
+                    fileName,
+                    arrayOf("testSheet0", "testSheet1", "testSheet2"),
+                    arrayOf(arrayOf("姓名", "年龄", "性别"), null, arrayOf("abc", "def"))
+                )
+                    .exportDataList(arrayListOf(data, data))
+
+//                    .insertImageFile(0, 5, 0, File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/export/10018_zhaoyun_1608083881214.png"))
+//                runOnUiThread {
+                toast("已保存")
+//                }
             }
             //endregion
         }
@@ -100,6 +118,39 @@ class MainTestActivity : BaseActivity() {
                     }
                 })
         }
+
+        btnCopyFile.onClick {
+//            lifecycleScope.launch {
+            File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/B88/").let { dir ->
+                dir.listFiles()
+                    .filter { file -> file.isFile && file.name.endsWith(".txt") }[0].copyTo(
+                    File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/copy/copy_file.txt")
+                )
+            }
+            toast("拷贝成功")
+//            }
+        }
+
+        btnMemory.onClick {
+            Environment.getExternalStorageDirectory().apply {
+//            tvMemory.text = "totalMemory:${Formatter.formatFileSize(this@MainTestActivity, totalSpace)}  availabelMemory:${Formatter.formatFileSize(this@MainTestActivity, usableSpace)}"
+                tvContent.text =
+                    "totalMemory:${totalSpace / 1000f / 1000 / 1000}G  availabelMemory:${usableSpace / 1000f / 1000 / 1000}G"
+//                Calendar.getInstance(Locale.CHINESE).also {
+//                    it.set(2020, 11, 23,0, 0 , 0)
+//                    val from = it.timeInMillis
+//                    it.set(2020, 11, 23,23, 59 , 59)
+//                    val to = it.timeInMillis
+//                    tvContent.text = File("${Environment.getExternalStorageDirectory().absolutePath}/chws/B88").getFilesByTimeRange(from, to)?.contentDeepToString()
+//                }
+            }
+        }
+
+        btnCmd.onClick {
+//            tvContent.text = CmdUtil.getStartSyncCmd()?.contentToString()
+            tvContent.text = CmdUtil.getTimeSyncCmd()?.contentToString()
+        }
+
     }
 
     override fun loadData() {

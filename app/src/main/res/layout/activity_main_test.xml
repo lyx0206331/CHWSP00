@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="showPD"
+        android:textSize="10sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btnTestChart"
@@ -29,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="testChart"
+        android:textSize="10sp"
         app:layout_constraintLeft_toRightOf="@id/btnShowPD"
         app:layout_constraintRight_toLeftOf="@+id/btnTestBt"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="testBt"
+        android:textSize="10sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@id/btnSave2Excel"
         app:layout_constraintLeft_toRightOf="@id/btnTestChart" />
@@ -47,8 +50,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="save2Excel"
+        android:textSize="10sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btnCopyFile"
+        app:layout_constraintLeft_toRightOf="@id/btnTestBt" />
+
+    <Button
+        android:id="@+id/btnCopyFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="copy file"
+        android:textSize="10sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/btnTestBt" />
+        app:layout_constraintLeft_toRightOf="@id/btnSave2Excel" />
+
+    <com.chwishay.chwsp00.views.CustomEditText
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入30个字符以内的字母数字或者汉字"
+        android:inputType="textPersonName"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnShowPD" />
+
+    <Button
+        android:id="@+id/btnMemory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="memory"
+        app:layout_constraintTop_toBottomOf="@id/et"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btnCmd"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/btnCmd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cmd test"
+        app:layout_constraintTop_toBottomOf="@id/et"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/btnMemory" />
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnCmd"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

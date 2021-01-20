@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.databinding.FragmentFeaturesEntryBinding
+import com.chwishay.commonlib.tools.getVersionName
 
 class FeaturesEntryFragment : Fragment() {
 
@@ -36,6 +37,7 @@ class FeaturesEntryFragment : Fragment() {
         binding.ivTextLogo.setOnClickListener {
             startActivity(Intent(activity, BtTestActivity::class.java))
         }
+        binding.tvVersion.text = "v${context?.getVersionName()}"
         return binding.root
     }
 

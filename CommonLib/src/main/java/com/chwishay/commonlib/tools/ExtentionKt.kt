@@ -1,10 +1,14 @@
 package com.chwishay.commonlib.tools
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import com.chwishay.commonlib.BuildConfig
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -51,6 +55,8 @@ object DateFormatStr {
     const val FORMAT_HMS_SSS = "HH:mm:ss.SSS"
 }
 
+fun Byte?.orDefault(default: Byte = 0): Byte = this ?: default
+
 fun Short?.orDefault(default: Short = 0): Short = this ?: default
 
 fun Int?.orDefault(default: Int = 0): Int = this ?: default
@@ -89,6 +95,18 @@ fun Context.showShortToast(@StringRes resId: Int) =
 
 fun Context.showLongToast(@StringRes resId: Int) =
     Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
+
+/**
+ * 获取版本码
+ */
+fun Context.getVersionCode(): Int = packageManager.getPackageInfo(packageName, 0).versionCode
+
+/**
+ * 获取版本号
+ */
+fun Context.getVersionName(): String = packageManager.getPackageInfo(packageName, 0).versionName
+
+inline fun Context.getColor1(@ColorRes colorId: Int) = this.resources.getColor(colorId)
 
 /**
  * 格式化日期字符串
@@ -130,9 +148,54 @@ fun ByteArray.read2FloatLE(offset: Int = 0) =
 fun Int.toBytesLE() =
     byteArrayOf(this.toByte(), this.shr(8).toByte(), this.shr(16).toByte(), this.shr(24).toByte())
 
+fun Int.toBytesBE() =
+    byteArrayOf(this.shr(24).toByte(), this.shr(16).toByte(), this.shr(8).toByte(), this.toByte())
+
 fun Short.toBytesLE() = byteArrayOf(this.toByte(), this.toInt().shr(8).toByte())
 
 fun Short.toBytesBE() = byteArrayOf(this.toInt().shr(8).toByte(), this.toByte())
+
+/**
+ * 字节数组转换成Short(大端)
+ */
+fun ByteArray.read2ShortBE() =
+    if (this == null) throw IllegalArgumentException("传入参数不正确")
+    else {
+        val bytes = when (this.size) {
+            0 -> byteArrayOf(0, 0)
+            1 -> byteArrayOf(0, this[0])
+            else -> this
+        }
+        0xff00.and(bytes[0].toInt().shl(8)).or(0x00ff.and(bytes[1].toInt())).toShort()
+    }
+
+/**
+ * 字节数组转换成Short(大端)
+ */
+fun ByteArray.read2UShortBE() =
+    if (this == null) throw IllegalArgumentException("传入参数不正确")
+    else {
+        val bytes = when (this.size) {
+            0 -> byteArrayOf(0, 0)
+            1 -> byteArrayOf(0, this[0])
+            else -> this
+        }
+        0xff00.and(bytes[0].toInt().shl(8)).or(0x00ff.and(bytes[1].toInt())).toUShort()
+    }
+
+/**
+ * 字节数组转换成Short(小端)
+ */
+fun ByteArray.read2ShortLE() =
+    if (this == null) throw IllegalArgumentException("传入参数不正确")
+    else {
+        val bytes = when (this.size) {
+            0 -> byteArrayOf(0, 0)
+            1 -> byteArrayOf(this[0], 0)
+            else -> this
+        }
+        0x00ff.and(bytes[0].toInt()).or(0xff00.and(bytes[1].toInt().shl(8))).toShort()
+    }
 
 /**
  * 字节数组转换为整型(大端模式)
@@ -320,3 +383,53 @@ fun String?.isSsidString() =
     else {
         Pattern.compile("^[A-Za-z]+[\\w\\-\\:\\.]*\$").matcher(this).matches()
     }
+
+val CHINESE_UNICODE = "[\\u4e00-\\u9fa5]"
+
+/**
+ * 是否包含汉字
+ */
+fun String?.containtChinese() = Pattern.compile(CHINESE_UNICODE).matcher(this).find()
+
+/**
+ * 是否全是汉字
+ */
+fun String?.isAllChinese() = Pattern.compile(CHINESE_UNICODE).matcher(this).matches()
+
+/**
+ * 是否只包含字母数字及汉字
+ */
+fun String.isNumOrCharOrChinese() = this.matches(Regex("^[a-z0-9A-Z\\u4e00-\\u9fa5]+$"))
+
+fun File.createFile(delOld: Boolean = false): File =
+    if (!exists() || !isFile) {
+        File(this.parent).also {
+            it.mkdirs()
+        }
+        createNewFile()
+        this
+    } else if (delOld) {
+        delete()
+        createNewFile()
+        this
+    } else {
+        this
+    }
+
+/**
+ * 根据时间范围获取文件
+ */
+fun File.getFilesByTimeRange(from: Long = 0, to: Long = System.currentTimeMillis()): Array<File>? =
+    if (exists()) {
+//    "time".logE("from:${from.formatDateString()}, to:${to.formatDateString()}")
+        listFiles { pathname -> pathname?.lastModified() in from..to }
+    } else {
+        null
+    }
+
+/**
+ * 是否有可用剩余空间
+ */
+@RequiresApi(Build.VERSION_CODES.GINGERBREAD)
+fun File.hasAvailableSpace(cacheByteCount: Long = 50 * 1024 * 1024L): Boolean =
+    usableSpace > cacheByteCount

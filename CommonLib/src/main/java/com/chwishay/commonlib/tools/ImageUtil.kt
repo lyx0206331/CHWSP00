@@ -59,12 +59,12 @@ object ImageUtil {
         bmp
     }
 
-    fun save2sdcard(v: View, dirPath: String, fileName: String) {
-        File(dirPath).apply { mkdirs() }.run {
-            File(this, "$fileName,png").let {
+    fun save2sdcard(v: View, dirPath: String, fileName: String): String {
+        return File(dirPath).apply { mkdirs() }.run {
+            File(this, "$fileName").let {
                 if (it.exists()) {
                     it.delete()
-                    File(this, "$fileName.png")
+                    File(this, "$fileName")
                 } else {
                     it
                 }
@@ -72,7 +72,11 @@ object ImageUtil {
         }.let { file ->
             file.outputStream().use { fos ->
                 loadBmpFromView(v).let { bmp ->
-                    bmp.compress(Bitmap.CompressFormat.PNG, 90, fos)
+                    bmp.compress(
+                        if (fileName.endsWith(".png")) Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG,
+                        90,
+                        fos
+                    )
                 }
                 fos.flush()
             }

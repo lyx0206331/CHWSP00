@@ -204,9 +204,8 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
         }
 
         val sf = StringBuilder()
-        val fis = FileInputStream(file)
-        fis?.let {
-            val isr = InputStreamReader(fis)
+        file.inputStream().use {
+            val isr = InputStreamReader(it)
             val br = BufferedReader(isr)
             var line: String? = br.readLine()
             while (line != null) {
@@ -215,7 +214,6 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
             }
             isr.close()
             br.close()
-            fis.close()
         }
         Log.e("SRC_DATA", sf.toString())
         val list = sf.split(" ", "\n")

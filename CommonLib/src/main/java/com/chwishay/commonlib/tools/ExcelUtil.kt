@@ -10,6 +10,8 @@ import jxl.format.Colour
 import jxl.write.Label
 import jxl.write.WritableCellFormat
 import jxl.write.WritableFont
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 //                       _ooOoo_
@@ -175,7 +177,7 @@ class ExcelUtil private constructor() {
      * @param sheetNames 表名
      * @param colNamesPerPage 每张表中的列名
      */
-    fun setFileInfo(
+    suspend fun setFileInfo(
         fileName: String,
         sheetNames: Array<String>,
         colNamesPerPage: Array<Array<String>?>?
@@ -189,19 +191,22 @@ class ExcelUtil private constructor() {
         if (!file.exists() || file.isDirectory) {
             file.createNewFile()
         }
-        val workbook = Workbook.createWorkbook(file)
-        sheetNames.forEachIndexed { index, sheetName ->
-            workbook.createSheet(sheetName, index).also {
-                if (colNamesPerPage != null && index < colNamesPerPage?.size.orDefault()) {
-                    colNamesPerPage[index]?.forEachIndexed { i, s ->
-                        it.addCell(Label(i, 0, s, headerFormat))
+        withContext(Dispatchers.IO) {
+
+            val workbook = Workbook.createWorkbook(file)
+            sheetNames.forEachIndexed { index, sheetName ->
+                workbook.createSheet(sheetName, index).also {
+                    if (colNamesPerPage != null && index < colNamesPerPage?.size.orDefault()) {
+                        colNamesPerPage[index]?.forEachIndexed { i, s ->
+                            it.addCell(Label(i, 0, s, headerFormat))
+                        }
                     }
+                    it.setRowView(0, 340)
                 }
-                it.setRowView(0, 340)
             }
+            workbook.write()
+            workbook.close()
         }
-        workbook.write()
-        workbook.close()
         return this
     }
 
@@ -216,31 +221,36 @@ class ExcelUtil private constructor() {
      * 将数据导出为excel文件(行优先),适用于行数量不多，但列数很多的数据
      * @param dataList 三维列表,分属:表list->行list->列list。dataList[表index][行index][列index].
      */
-    fun exportRowFirst(dataList: List<List<List<String>>>): ExcelUtil {
+    suspend fun exportRowFirst(dataList: List<List<List<String>>>): ExcelUtil {
         if (fileName.isNullOrEmpty()) {
             throw NullPointerException("请输入正确的文件名")
         }
-        //遍历表list
-        dataList.forEachIndexed { index, list ->
-            WorkbookSettings().encoding = "UTF-8"
-            File(fileName).let { file ->
-                file.inputStream().use { fis ->
-                    Workbook.createWorkbook(file, Workbook.getWorkbook(fis)).also { writebook ->
-                        //有表头时，数据插入下移一行，无表头时，不下移
-                        val rowOffset = if (hasHeader(index)) 1 else 0
-                        writebook.getSheet(index).let { sheet ->
-                            //遍历行
-                            list.forEachIndexed { j, t ->
-                                //遍历列
-                                t.forEachIndexed { i, s ->
-                                    sheet.addCell(Label(i, j + rowOffset, s, contentFormat))
-                                    sheet.setColumnView(i, s.length + (if (s.length > 4) 5 else 8))
+        withContext(Dispatchers.IO) {
+            //遍历表list
+            dataList.forEachIndexed { index, list ->
+                WorkbookSettings().encoding = "UTF-8"
+                File(fileName).let { file ->
+                    file.inputStream().use { fis ->
+                        Workbook.createWorkbook(file, Workbook.getWorkbook(fis)).also { writebook ->
+                            //有表头时，数据插入下移一行，无表头时，不下移
+                            val rowOffset = if (hasHeader(index)) 1 else 0
+                            writebook.getSheet(index).let { sheet ->
+                                //遍历行
+                                list.forEachIndexed { j, t ->
+                                    //遍历列
+                                    t.forEachIndexed { i, s ->
+                                        sheet.addCell(Label(i, j + rowOffset, s, contentFormat))
+                                        sheet.setColumnView(
+                                            i,
+                                            s.length + (if (s.length > 4) 5 else 8)
+                                        )
+                                    }
+                                    sheet.setRowView(j + rowOffset, 350)
                                 }
-                                sheet.setRowView(j + rowOffset, 350)
+                                writebook.write()
                             }
-                            writebook.write()
-                        }
-                    }.close()
+                        }.close()
+                    }
                 }
             }
         }
@@ -251,39 +261,99 @@ class ExcelUtil private constructor() {
      * 将数据导出为excel文件(列优先),适用于列数量不多，但行数很多的数据
      * @param dataList 三维列表,分属:表list->列list->行list。dataList[表index][列index][行index].
      */
-    fun exportColFirst(dataList: List<List<List<String>>>): ExcelUtil {
+    suspend fun exportColFirst(dataList: List<List<List<String>>>): ExcelUtil {
         if (fileName.isNullOrEmpty()) {
             throw NullPointerException("请输入正确的文件名")
         }
-        //遍历表list
-        dataList.forEachIndexed { index, list ->
-            WorkbookSettings().encoding = "UTF-8"
-            File(fileName).let { file ->
-                file.inputStream().use { fis ->
-                    Workbook.createWorkbook(file, Workbook.getWorkbook(fis)).also { writebook ->
-                        //有表头时，数据插入下移一行，无表头时，不下移
-                        val rowOffset = if (hasHeader(index)) 1 else 0
-                        writebook.getSheet(index).let { sheet ->
-                            //遍历列
-                            list.forEachIndexed { j, t ->
-                                //遍历行
-                                t.forEachIndexed { i, s ->
-                                    sheet.addCell(Label(j, i + rowOffset, s, contentFormat))
-                                    sheet.setColumnView(j, s.length + (if (s.length > 4) 5 else 8))
-                                    //只需要在遍历第一列的每一行时设置行高便可
-                                    if (j == 0) {
-                                        sheet.setRowView(i + rowOffset, 350)
+        withContext(Dispatchers.IO) {
+            //遍历表list
+            dataList.forEachIndexed { index, list ->
+                WorkbookSettings().encoding = "UTF-8"
+                File(fileName).let { file ->
+                    file.inputStream().use { fis ->
+                        Workbook.createWorkbook(file, Workbook.getWorkbook(fis)).also { writebook ->
+                            //有表头时，数据插入下移一行，无表头时，不下移
+                            val rowOffset = if (hasHeader(index)) 1 else 0
+                            writebook.getSheet(index).let { sheet ->
+                                //遍历列
+                                list.forEachIndexed { j, t ->
+                                    //遍历行
+                                    t.forEachIndexed { i, s ->
+                                        sheet.addCell(Label(j, i + rowOffset, s, contentFormat))
+                                        sheet.setColumnView(
+                                            j,
+                                            s.length + (if (s.length > 4) 5 else 8)
+                                        )
+                                        //只需要在遍历第一列的每一行时设置行高便可
+                                        if (j == 0) {
+                                            sheet.setRowView(i + rowOffset, 350)
+                                        }
                                     }
                                 }
+                                writebook.write()
                             }
-                            writebook.write()
-                        }
-                    }.close()
+                        }.close()
+                    }
                 }
             }
         }
         return this
     }
+
+    /**
+     * 将数据导出为excel文件(列优先),适用于列数量不多，但行数很多的数据
+     * @param dataList 数据列表.
+     */
+    suspend fun exportDataList(dataList: List<List<ExcelItem>>): ExcelUtil {
+        if (fileName.isNullOrEmpty()) {
+            throw NullPointerException("请输入正确的文件名")
+        }
+        withContext(Dispatchers.IO) {
+            dataList.forEachIndexed { index, list ->
+                WorkbookSettings().encoding = "UTF-8"
+                File(fileName).let { file ->
+                    file.inputStream().use { fis ->
+                        Workbook.createWorkbook(file, Workbook.getWorkbook(fis))
+                            .also { writableWorkbook ->
+                                val rowOffset = if (hasHeader(index)) 1 else 0
+                                writableWorkbook.getSheet(index).let { sheet ->
+                                    list.forEach { item ->
+                                        sheet.addCell(
+                                            Label(
+                                                item.col,
+                                                item.row + rowOffset,
+                                                item.content,
+                                                contentFormat
+                                            )
+                                        )
+                                        sheet.setColumnView(
+                                            item.col,
+                                            item.content.length + (if (item.content.length > 4) 5 else 8)
+                                        )
+                                    }
+                                    writableWorkbook.write()
+                                }
+                            }.close()
+                    }
+                }
+            }
+        }
+        return this
+    }
+
+    class ExcelItem(
+        val row: Int,
+        val col: Int,
+        val content: String,
+        val format: WritableCellFormat = WritableCellFormat(
+            WritableFont(
+                WritableFont.ARIAL,
+                12
+            )
+        ).apply {
+            setBorder(Border.ALL, BorderLineStyle.THIN)
+        }
+    )
 
 //    fun insertImageFile(sheetIndex: Int, row: Int, column: Int, imageFile: File) {
 //        if (imageFile.exists()) {

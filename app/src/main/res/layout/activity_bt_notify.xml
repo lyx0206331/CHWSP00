@@ -43,12 +43,12 @@
             android:text="同步数据" />
 
         <Button
-            android:id="@+id/btnTimeCompensation"
+            android:id="@+id/btnCheckTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:layout_marginRight="10dp"
-            android:text="时间补偿" />
+            android:text="时间校正" />
 
         <Button
             android:id="@+id/btnStopCollect"
