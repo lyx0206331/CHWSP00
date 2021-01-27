@@ -108,13 +108,14 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                 setAvoidFirstLastClipping(false)
                 isEnabled = true
             }
-            it.isAutoScaleMinMaxEnabled = true
 //            it.axisLeft.apply {
 //                textColor = Color.WHITE
 //                axisMaximum = 40f
 //                axisMinimum = -40f
 //                setDrawGridLines(true)
 //            }
+            //根据数据自动缩放展示最大最小值,不能设置axisLeft,否则自动缩放无效
+            it.isAutoScaleMinMaxEnabled = true
             it.axisRight.isEnabled = false
             it.description.isEnabled = false
         }
@@ -192,12 +193,14 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                             if (gattCharacteristic.properties.and(BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                                 holder.switchNotify.onCheckedChange { buttonView, isChecked ->
                                     holder.etFileName.isEnabled = !isChecked
+                                    bleDeviceInfo.serviceUUID = gattCharacteristic.service.uuid
+                                    bleDeviceInfo.notifyUUID = gattCharacteristic.uuid
                                     if (isChecked) {
                                         bleDeviceInfo.startReceive()
                                         BleManager.getInstance().notify(
                                             this@apply,
-                                            gattCharacteristic.service.uuid.toString(),
-                                            gattCharacteristic.uuid.toString(),
+                                            bleDeviceInfo.serviceUUID.toString(),
+                                            bleDeviceInfo.notifyUUID.toString(),
                                             object : BleNotifyCallback() {
                                                 override fun onNotifySuccess() {
                                                     appendData(holder.tvData, "notify success")
@@ -258,8 +261,8 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                             "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
                                         BleManager.getInstance().stopNotify(
                                             this@apply,
-                                            gattCharacteristic.service.uuid.toString(),
-                                            gattCharacteristic.uuid.toString()
+                                            bleDeviceInfo.serviceUUID.toString(),
+                                            bleDeviceInfo.notifyUUID.toString()
                                         )
                                     }
                                 }
@@ -345,5 +348,21 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
 
     override fun getItemCount(): Int {
         return devices?.size.orDefault()
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        "detachedRV".logE("onDetachedFromRecyclerView")
+        devices?.forEach {
+            if (it.serviceUUID != null && it.notifyUUID != null) {
+                BleManager.getInstance()
+                    .stopNotify(it.bleDevice, it.serviceUUID.toString(), it.notifyUUID.toString())
+            }
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: NotifyViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        "detachedRV".logE("onViewDetachedFromWindow")
     }
 }

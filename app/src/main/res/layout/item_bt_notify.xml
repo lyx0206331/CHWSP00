@@ -117,6 +117,7 @@
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:enabled="false"
                     android:text="报告" />
             </LinearLayout>
 

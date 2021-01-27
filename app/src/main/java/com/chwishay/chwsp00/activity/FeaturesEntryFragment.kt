@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.btUtil.BtTestActivity
 import com.chwishay.chwsp00.databinding.FragmentFeaturesEntryBinding
+import com.chwishay.chwsp00.utils.isTestMode
 import com.chwishay.commonlib.tools.getVersionName
 
 class FeaturesEntryFragment : Fragment() {
@@ -25,17 +26,28 @@ class FeaturesEntryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFeaturesEntryBinding.inflate(inflater, container, false)
-        binding.btnReg.setOnClickListener {
-            it.findNavController().navigate(R.id.actionFeaturesEntry2newRegister)
-        }
-        binding.btnUse.setOnClickListener {
-            it.findNavController().navigate(R.id.actionFeaturesEntry2testUserChoose)
-        }
-        binding.btnReport.setOnClickListener {
-            it.findNavController().navigate(R.id.actionFeaturesEntry2recentLogin)
-        }
-        binding.ivTextLogo.setOnClickListener {
-            startActivity(Intent(activity, BtTestActivity::class.java))
+        if (isTestMode) {
+            binding.btnReg.visibility = View.GONE
+            binding.btnUse.visibility = View.GONE
+            binding.btnReport.visibility = View.GONE
+            binding.btnCollectData.visibility = View.VISIBLE
+            binding.btnCollectData.setOnClickListener {
+                startActivity(Intent(activity, BtTestActivity::class.java))
+            }
+        } else {
+            binding.btnReg.visibility = View.VISIBLE
+            binding.btnUse.visibility = View.VISIBLE
+            binding.btnReport.visibility = View.VISIBLE
+            binding.btnCollectData.visibility = View.GONE
+            binding.btnReg.setOnClickListener {
+                it.findNavController().navigate(R.id.actionFeaturesEntry2newRegister)
+            }
+            binding.btnUse.setOnClickListener {
+                it.findNavController().navigate(R.id.actionFeaturesEntry2testUserChoose)
+            }
+            binding.btnReport.setOnClickListener {
+                it.findNavController().navigate(R.id.actionFeaturesEntry2recentLogin)
+            }
         }
         binding.tvVersion.text = "v${context?.getVersionName()}"
         return binding.root

@@ -37,6 +37,7 @@ dependencies {
     implementation rootProject.ext.dependencies.androidXAppcompat
     implementation rootProject.ext.dependencies.androidXConstraintLayout
     implementation rootProject.ext.dependencies.androidXCore
+    api rootProject.ext.dependencies.androidXLifecycleViewModelKtx
 
     implementation rootProject.ext.dependencies.coroutinesCore
     implementation rootProject.ext.dependencies.coroutinesAndroid

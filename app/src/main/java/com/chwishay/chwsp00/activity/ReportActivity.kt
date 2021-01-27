@@ -112,7 +112,7 @@ class ReportActivity : BaseActivity() {
     private fun test() {
         val values = arrayListOf<BarEntry>()
         for (i in 0 until stepCount) {
-            values.add(BarEntry(i + 1f, floatArrayOf(stepArray[i]), null))
+            values.add(BarEntry(i + 1f, floatArrayOf(stepArray!![i]), null))
         }
 
         var dataSet: BarDataSet

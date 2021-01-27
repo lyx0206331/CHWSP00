@@ -9,6 +9,7 @@ import com.chwishay.commonlib.tools.read2LongLE
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
 import java.io.*
+import java.util.*
 import kotlin.concurrent.thread
 
 //                       _ooOoo_
@@ -38,6 +39,10 @@ import kotlin.concurrent.thread
  * description:
  */
 class BleDeviceInfo(val bleDevice: BleDevice) {
+
+    var serviceUUID: UUID? = null
+    var notifyUUID: UUID? = null
+
     var lastCalTime = 0L
     var speed: Int = 0
     var totalSize: Int = 0

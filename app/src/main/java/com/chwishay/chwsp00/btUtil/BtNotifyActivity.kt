@@ -31,20 +31,6 @@ class BtNotifyActivity : BaseActivity(), Observer {
         //ble设备特征值UUID
         const val CHARACTERISTICS_UUID = "8653000c-43e6-47b7-9cb0-5fc21d4ae340"
 
-        //同步数据命令
-        val CMD_SYNC_DATA = byteArrayOf(
-            0xFA.toByte(), 0xFF.toByte(),
-            0xA3.toByte(), 0x01, 0x5A, 0x02
-        )
-
-        //停止采集命令
-        val CMD_STOP_COLLECT = byteArrayOf(
-            0xFA.toByte(), 0xFF.toByte(),
-            0xA4.toByte(), 0x01, 0xAA.toByte(), 0xB1.toByte()
-        )
-
-        private var timeEquation = 0L
-
         @JvmStatic
         fun startActivity(context: Context, devices: ArrayList<BleDevice>) {
             val intent = Intent(context, BtNotifyActivity::class.java)
@@ -56,22 +42,6 @@ class BtNotifyActivity : BaseActivity(), Observer {
     private val adapter by lazy {
         NotifyAdapter(this) {
             sendCmd(it.bleDevice, CmdUtil.getTimeSyncCmd())
-//            if (!it.isNullOrEmpty() && it.size > 1 && it[0].syncTime > 0 && it[1].syncTime > 0) {
-//                timeEquation = kotlin.math.abs(it[1].syncTime - it[0].syncTime)
-//                btnSyncData.text = "同步数据(时差:$timeEquation)"
-////                if (timeEquation >= 30) {
-////                    it?.minWith(Comparator { o1, o2 ->
-////                        (o1.syncTime - o2.syncTime).toInt()
-////                    })?.apply {
-////                        "cmd".logE("timeEqShort:${timeEquation.toShort()}, bytes:${timeEquation.toShort().toBytesLE().read2IntLE()}")
-////                        val timeEqBytes = timeEquation.toShort().toBytesLE()
-////                        val cmdBytes = byteArrayOf(0xA5.toByte(), *timeEqBytes, 0xA5.toByte())
-////                        sendCmd(bleDevice,cmdBytes)
-////                    }
-////                }
-////                it[0].syncTime = 0
-////                it[1].syncTime = 0
-//            }
         }
     }
 
@@ -182,6 +152,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
+        rvNotify.adapter = null
         devices?.forEach {
             BleManager.getInstance().clearCharacterCallback(it)
         }

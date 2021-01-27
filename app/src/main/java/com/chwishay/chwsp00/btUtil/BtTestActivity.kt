@@ -26,6 +26,7 @@ import com.clj.fastble.scan.BleScanRuleConfig
 import kotlinx.android.synthetic.main.activity_bt_test.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.textResource
+import org.jetbrains.anko.toast
 
 class BtTestActivity : BaseActivity() {
 
@@ -92,10 +93,14 @@ class BtTestActivity : BaseActivity() {
             }
         }
         btn_entry.onClick {
-            BtNotifyActivity.startActivity(
-                this@BtTestActivity,
-                connectedAdapter.allDevices
-            )
+            if (connectedAdapter.allDevices.isNotEmpty()) {
+                BtNotifyActivity.startActivity(
+                    this@BtTestActivity,
+                    connectedAdapter.allDevices
+                )
+            } else {
+                toast("请先连接ble设备")
+            }
         }
         list_device.adapter = deviceAdapter
         list_connected.adapter = connectedAdapter
