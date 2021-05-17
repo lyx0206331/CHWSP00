@@ -5,7 +5,6 @@ import android.util.Log
 import com.chwishay.commonlib.tools.formatDateString
 import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.read2FloatBE
-import com.chwishay.commonlib.tools.read2LongLE
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.utils.HexUtil
 import java.io.*
@@ -75,15 +74,24 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
         set(value) {
             field = value
             lastDataSize = field?.size.orDefault()
-            if (lastDataSize == 7 && field!![0] == 0xFB.toByte() && field!![1] == 0xFF.toByte()) {
-                field!!.copyOfRange(2, 6).apply {
-                    sysTime = this.read2LongLE()
-                    syncTime = sysTime
+//            if (lastDataSize == 7 && field!![0] == 0xFB.toByte() && field!![1] == 0xFF.toByte()) {
+//                field!!.copyOfRange(2, 6).apply {
+//                    sysTime = this.read2LongLE()
+//                    syncTime = sysTime
+//                }
+//            }
+            if (needSave && field != null) {
+                thread {
+                    field?.also { data ->
+//                        if (data.size == 93 && data.sliceArray(IntRange(0, 30)).isValid() && data.sliceArray(
+//                                IntRange(31, 61)
+//                            ).isValid() && data.sliceArray(IntRange(62, 92)).isValid()
+//                        ) {
+                        writeStr2File(fileName, data, true)
+////                            writeStr2File(fileName, field, false)
+//                        }
+                    }
                 }
-            }
-            if (needSave) {
-                writeStr2File(fileName, field, true)
-                writeStr2File(fileName, field, false)
             }
         }
 
@@ -154,36 +162,32 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
      */
     private fun writeStr2File(fileName: String, data: ByteArray?, isSrc: Boolean = true) {
         if (data == null/* || (data[0] != 0xfa.toByte() && data[1] != 0xff.toByte())*/) return
-        thread {
-
-            val content = if (isSrc) "${HexUtil.formatHexString(data, true)}\n" else {
-                if (data.size >= 35) {
-                    val frameCount = data.size / 35
-                    val sb = StringBuilder()
-                    for (i in 0 until frameCount) {
-                        val result = FloatArray(18) { 0f }
-                        val baseOffset = i * 35
-                        result[2] = data.read2FloatBE(baseOffset + 7)
-                        result[3] = data.read2FloatBE(baseOffset + 11)
-                        result[4] = data.read2FloatBE(baseOffset + 15)
-                        result[8] = data.read2FloatBE(baseOffset + 22)
-                        result[9] = data.read2FloatBE(baseOffset + 26)
-                        result[10] = data.read2FloatBE(baseOffset + 30)
-                        val str = "${result.contentToString().replace(",", "")}"
-//                        "RST".logE(str)
-                        sb.append("${str.subSequence(1, str.lastIndex)}\n")
-                    }
-                    "$sb"
-                } else {
-                    "${HexUtil.formatHexString(data, true)}\n"
+        val content = if (isSrc) "${HexUtil.formatHexString(data, true)}\n" else {
+            if (data.size >= 31) {
+                val frameCount = data.size / 31
+                val sb = StringBuilder()
+                for (i in 0 until frameCount) {
+                    val result = FloatArray(18) { 0f }
+                    val baseOffset = i * 31
+                    result[2] = data.read2FloatBE(baseOffset + 7)
+                    result[3] = data.read2FloatBE(baseOffset + 11)
+                    result[4] = data.read2FloatBE(baseOffset + 15)
+                    result[8] = data.read2FloatBE(baseOffset + 22)
+                    result[9] = data.read2FloatBE(baseOffset + 26)
+                    result[10] = data.read2FloatBE(baseOffset + 30)
+                    val str = "${result.contentToString().replace(",", "")}"
+                    sb.append("${str.subSequence(1, str.lastIndex)}\n")
                 }
+                "$sb"
+            } else {
+                "${HexUtil.formatHexString(data, true)}\n"
             }
+        }
 //            "DATA".logE("$content")
-            val file = checkFileExists(if (isSrc) "${fileName}_src" else "${fileName}_rst")
-            if (!isSrc) filePath = file.absolutePath
-            BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).use {
-                it.write(content)
-            }
+        val file = checkFileExists(if (isSrc) "${fileName}_src" else "${fileName}_rst")
+        if (!isSrc) filePath = file.absolutePath
+        BufferedWriter(OutputStreamWriter(FileOutputStream(file, true))).use {
+            it.write(content)
         }
     }
 

@@ -22,23 +22,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ReportActivity"></activity>
-        <activity android:name=".btUtil.BtNotifyActivity" />
+        <activity
+            android:name=".activity.ReportActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".btUtil.BtNotifyActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LineChartActivity" />
-        <activity android:name=".btUtil.BtTestActivity" />
-        <activity android:name=".activity.ChartActivity" />
+        <activity
+            android:name=".activity.LineChartActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".btUtil.BtTestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChartActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainTestActivity"
-            android:label="P00TestEntry">
+            android:label="P00TestEntry"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

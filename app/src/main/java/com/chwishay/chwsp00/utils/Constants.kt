@@ -1,5 +1,7 @@
 package com.chwishay.chwsp00.utils
 
+import com.chwishay.chwsp00.BuildConfig
+
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
@@ -24,3 +26,5 @@ package com.chwishay.chwsp00.utils
  **/
 
 val isTestMode = true
+
+val isDebug = BuildConfig.DEBUG

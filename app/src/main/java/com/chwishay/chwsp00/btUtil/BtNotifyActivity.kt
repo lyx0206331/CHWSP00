@@ -29,7 +29,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
         const val SERVICE_UUID = "8653000a-43e6-47b7-9cb0-5fc21d4ae340"
 
         //ble设备特征值UUID
-        const val CHARACTERISTICS_UUID = "8653000c-43e6-47b7-9cb0-5fc21d4ae340"
+        const val CHARACTERISTICS_WRITE_UUID = "8653000c-43e6-47b7-9cb0-5fc21d4ae340"
 
         @JvmStatic
         fun startActivity(context: Context, devices: ArrayList<BleDevice>) {
@@ -71,7 +71,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
 
         btnSyncData.onClick {
 //            adapter.dataIndex = 0
-            sendSyncCmd(/*CMD_SYNC_DATA*/CmdUtil.getStartSyncCmd())
+            sendSyncCmd(CmdUtil.getStartSyncCmd())
         }
         btnCheckTime.onClick {
             checkTime()
@@ -115,6 +115,10 @@ class BtNotifyActivity : BaseActivity(), Observer {
             it.sysTime = 0L
             sendCmd(it.bleDevice, cmd)
         }
+//        adapter.devices?.forEach {
+//            it.sysTime = 0L
+//            sendCmd(it.bleDevice, cmd)
+//        }
     }
 
     private fun sendCollectCmd(cmd: ByteArray) {
@@ -129,7 +133,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
         BleManager.getInstance().write(
             device,
             SERVICE_UUID,
-            CHARACTERISTICS_UUID,
+            CHARACTERISTICS_WRITE_UUID,
             cmd,
             object : BleWriteCallback() {
                 override fun onWriteSuccess(

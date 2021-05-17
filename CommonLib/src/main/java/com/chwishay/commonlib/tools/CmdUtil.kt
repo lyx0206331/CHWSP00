@@ -139,6 +139,14 @@ object CmdUtil {
             null
         }
 
+    fun ByteArray.isValid(): Boolean =
+        size == 31 && this[0] == headBytes[0] && this[1] == headBytes[1] && this.sliceArray(
+            IntRange(
+                2,
+                size - 2
+            )
+        ).cmdVerify().toByte() == this[size - 1]
+
     fun ByteArray.parseImuData(): List<IMUEntity>? = if (this.size != 93) {
         "IMUValues".logE("数据不完整: ${this.contentToString()}")
         null
@@ -147,13 +155,7 @@ object CmdUtil {
         for (i in 0..2) {
             val start = i * 31
             val frameBytes = this.sliceArray(IntRange(start, start + 30))
-            if (frameBytes[0] == headBytes[0] && frameBytes[1] == headBytes[1] && frameBytes.sliceArray(
-                    IntRange(
-                        2,
-                        frameBytes.size - 2
-                    )
-                ).cmdVerify().toByte() == frameBytes[frameBytes.size - 1]
-            ) {
+            if (frameBytes.isValid()) {
                 val imuEntity = IMUEntity(
                     byteArrayOf(frameBytes[5], frameBytes[6]).read2UShortBE(),
                     byteArrayOf(frameBytes[7], frameBytes[8]).read2UShortBE(),

@@ -1,5 +1,4 @@
 include ':FastBleLib'
-include ':BTLib'
 include ':CommonLib'
 include ':app'
 rootProject.name = "CHWSP00"

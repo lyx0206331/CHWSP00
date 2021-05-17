@@ -146,19 +146,37 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
             val gyrY1Set = getDataSet(3, context.getColor1(R.color.purple7E2E8D), "gyrY1")
             val accZ1Set = getDataSet(4, context.getColor1(R.color.colorPrimary), "accZ1")
             val gyrZ1Set = getDataSet(5, context.getColor1(R.color.redFE0000), "gyrZ1")
+            val accX2Set = getDataSet(6, ColorTemplate.getHoloBlue(), "accX2")
+            val gyrX2Set = getDataSet(7, context.getColor1(R.color.green01FD01), "gyrX2")
+            val accY2Set = getDataSet(8, context.getColor1(R.color.yellowFFFF00), "accY2")
+            val gyrY2Set = getDataSet(9, context.getColor1(R.color.purple7E2E8D), "gyrY2")
+            val accZ2Set = getDataSet(10, context.getColor1(R.color.colorPrimary), "accZ2")
+            val gyrZ2Set = getDataSet(11, context.getColor1(R.color.redFE0000), "gyrZ2")
             val accX1 = getAccValue(entity.accX1)
             val gyrX1 = getGyrValue(entity.gyrX1)
             val accY1 = getAccValue(entity.accY1)
             val gyrY1 = getGyrValue(entity.gyrY1)
             val accZ1 = getAccValue(entity.accZ1)
             val gyrZ1 = getGyrValue(entity.gyrZ1)
-            "IMU_Value".logE("accX1:$accX1, gyrX1:$gyrX1")
+            val accX2 = getAccValue(entity.accX2)
+            val gyrX2 = getGyrValue(entity.gyrX2)
+            val accY2 = getAccValue(entity.accY2)
+            val gyrY2 = getGyrValue(entity.gyrY2)
+            val accZ2 = getAccValue(entity.accZ2)
+            val gyrZ2 = getGyrValue(entity.gyrZ2)
+//            "IMU_Value".logE("accX1:$accX1, gyrX1:$gyrX1")
             d.addEntry(Entry(accX1Set.entryCount.toFloat(), accX1), 0)
             d.addEntry(Entry(gyrX1Set.entryCount.toFloat(), gyrX1), 1)
             d.addEntry(Entry(accY1Set.entryCount.toFloat(), accY1), 2)
             d.addEntry(Entry(gyrY1Set.entryCount.toFloat(), gyrY1), 3)
             d.addEntry(Entry(accZ1Set.entryCount.toFloat(), accZ1), 4)
             d.addEntry(Entry(gyrZ1Set.entryCount.toFloat(), gyrZ1), 5)
+            d.addEntry(Entry(accX2Set.entryCount.toFloat(), accX2), 6)
+            d.addEntry(Entry(gyrX2Set.entryCount.toFloat(), gyrX2), 7)
+            d.addEntry(Entry(accY2Set.entryCount.toFloat(), accY2), 8)
+            d.addEntry(Entry(gyrY2Set.entryCount.toFloat(), gyrY2), 9)
+            d.addEntry(Entry(accZ2Set.entryCount.toFloat(), accZ2), 10)
+            d.addEntry(Entry(gyrZ2Set.entryCount.toFloat(), gyrZ2), 11)
             d.notifyDataChanged()
 
             this.notifyDataSetChanged()
@@ -195,6 +213,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                     holder.etFileName.isEnabled = !isChecked
                                     bleDeviceInfo.serviceUUID = gattCharacteristic.service.uuid
                                     bleDeviceInfo.notifyUUID = gattCharacteristic.uuid
+                                    "UUID".logE("serviceUUID:${bleDeviceInfo.serviceUUID}  notifyUUID:${bleDeviceInfo.notifyUUID}")
                                     if (isChecked) {
                                         bleDeviceInfo.startReceive()
                                         BleManager.getInstance().notify(
@@ -250,7 +269,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                                         }
                                                         appendData(
                                                             holder.tvData,
-                                                            HexUtil.formatHexString(data, true)
+                                                            HexUtil.formatHexString(d, true)
                                                         )
                                                     }
                                                 }
