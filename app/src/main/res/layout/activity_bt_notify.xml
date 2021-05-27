@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:layout_marginRight="10dp"
-            android:text="时间校正" />
+            android:text="时间校正"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnStopCollect"

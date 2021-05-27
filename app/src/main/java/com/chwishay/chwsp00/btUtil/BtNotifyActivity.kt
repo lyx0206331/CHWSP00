@@ -113,6 +113,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
     private fun sendSyncCmd(cmd: ByteArray) {
         adapter.devices?.get(0)?.let {
             it.sysTime = 0L
+            adapter.resetFirstFrameMarks()
             sendCmd(it.bleDevice, cmd)
         }
 //        adapter.devices?.forEach {

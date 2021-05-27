@@ -40,6 +40,7 @@ object CmdUtil {
     const val TYPE_SYNC_STOP = 0xA4
     const val TYPE_CONN_STATE = 0xA5
     const val TYPE_SYNC_TIME = 0xA6
+    const val TYPE_FIRMWARE_VERSION = 0xA7
 
     @Retention(AnnotationRetention.SOURCE)
     @IntDef(
@@ -49,7 +50,8 @@ object CmdUtil {
         TYPE_SYNC_START,
         TYPE_SYNC_STOP,
         TYPE_CONN_STATE,
-        TYPE_SYNC_TIME
+        TYPE_SYNC_TIME,
+        TYPE_FIRMWARE_VERSION
     )
     annotation class CmdType
 
@@ -155,7 +157,7 @@ object CmdUtil {
         for (i in 0..2) {
             val start = i * 31
             val frameBytes = this.sliceArray(IntRange(start, start + 30))
-            if (frameBytes.isValid()) {
+//            if (frameBytes.isValid()) {
                 val imuEntity = IMUEntity(
                     byteArrayOf(frameBytes[5], frameBytes[6]).read2UShortBE(),
                     byteArrayOf(frameBytes[7], frameBytes[8]).read2UShortBE(),
@@ -172,7 +174,7 @@ object CmdUtil {
                 )
                 "IMU_DATA".logE("IMU:$imuEntity")
                 list.add(imuEntity)
-            }
+//            }
         }
         list
     }

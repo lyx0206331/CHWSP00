@@ -200,6 +200,13 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
         )
     }
 
+    private var firstFrameMarks = arrayListOf<Boolean>()
+
+    fun resetFirstFrameMarks() {
+        firstFrameMarks.clear()
+        devices?.forEach { _ -> firstFrameMarks.add(true) }
+    }
+
     override fun onBindViewHolder(holder: NotifyViewHolder, position: Int) {
         val bleDeviceInfo = devices?.get(position)
         bleDeviceInfo?.bleDevice?.apply {
@@ -252,20 +259,30 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
 //                                                                        }
                                                                         CmdUtil.TYPE_CONN_STATE.toByte() -> {
                                                                         }
+                                                                        CmdUtil.TYPE_FIRMWARE_VERSION.toByte() -> {
+                                                                            holder.tvSysTime.text =
+                                                                                "固件版本:${dataEntity.content[0].convert2Version()}"
+                                                                        }
                                                                         else -> {
                                                                         }
                                                                     }
 
                                                                 }
                                                         } else {
-                                                            bleDeviceInfo.lastData = d
-                                                            holder.tvSysTime.text =
-                                                                "系统时间:${bleDeviceInfo.sysTime}ms"
-                                                            holder.tvReceiveSpeed.text =
-                                                                "${bleDeviceInfo.speed}byte/s"
-                                                            holder.tvTotalData.text =
-                                                                "总接收数据:${bleDeviceInfo.totalSize}byte"
-                                                            holder.chart.addEntry(d)
+                                                            if (!firstFrameMarks[position]) {
+                                                                "firstFrame".logE("isNotFirstFrame4Dev$position")
+                                                                bleDeviceInfo.lastData = d
+//                                                            holder.tvSysTime.text =
+//                                                                "系统时间:${bleDeviceInfo.sysTime}ms"
+                                                                holder.tvReceiveSpeed.text =
+                                                                    "${bleDeviceInfo.speed}byte/s"
+                                                                holder.tvTotalData.text =
+                                                                    "总接收数据:${bleDeviceInfo.totalSize}byte"
+                                                                holder.chart.addEntry(d)
+                                                            } else {
+                                                                "firstFrame".logE("isFirstFrame4Dev$position")
+                                                                firstFrameMarks[position] = false
+                                                            }
                                                         }
                                                         appendData(
                                                             holder.tvData,
@@ -310,7 +327,10 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                     }
                                 }
                                 holder.btnBuildReport.onClick {
-                                    if (bleDeviceInfo.needSave || !File(bleDeviceInfo.filePath).exists()) {
+                                    if (bleDeviceInfo.needSave || bleDeviceInfo.filePath == null || !File(
+                                            bleDeviceInfo.filePath
+                                        ).exists()
+                                    ) {
                                         context.showShortToast("请先保存数据")
                                         return@onClick
                                     } else {
@@ -343,6 +363,15 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                     }
                 }
             }
+        }
+    }
+
+    fun Byte.convert2Version(): String {
+        return this.toInt().let {
+            val v1 = it / 100
+            val v2 = it % 100 / 10
+            val v3 = it % 10
+            "v$v1.$v2.$v3"
         }
     }
 
