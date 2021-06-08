@@ -63,7 +63,8 @@ object CmdUtil {
     var headBytes: ByteArray = byteArrayOf(0xFA.toByte(), 0xFF.toByte())
 
     private fun createCmdData(cmdData: ByteArray): ByteArray {
-        cmdByteBuf.clear()
+//        cmdByteBuf.clear()
+        val cmdByteBuf = Unpooled.buffer()
         cmdByteBuf.capacity(headBytes?.size.orDefault() + cmdData.size + 1)
         cmdByteBuf.writeBytes(headBytes)
         cmdByteBuf.writeBytes(cmdData)
@@ -172,7 +173,7 @@ object CmdUtil {
                     byteArrayOf(frameBytes[26], frameBytes[27]).read2UShortBE(),
                     byteArrayOf(frameBytes[28], frameBytes[29]).read2UShortBE()
                 )
-                "IMU_DATA".logE("IMU:$imuEntity")
+//                "IMU_DATA".logE("IMU:$imuEntity")
                 list.add(imuEntity)
 //            }
         }

@@ -14,9 +14,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rvNotify"
+        app:layout_constraintBottom_toTopOf="@id/tlInfo"
         android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <!--<EditText
             android:id="@+id/etInputCmd"
@@ -59,6 +60,52 @@
             android:text="停止采集" />
     </LinearLayout>
 
+    <TableLayout
+        android:id="@+id/tlInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rvNotify">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:lines="1"
+                android:inputType="text"
+                android:hint="用户姓名"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etUserId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:lines="1"
+                android:inputType="number"
+                android:hint="病历编号"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="开始" />
+        </TableRow>
+    </TableLayout>
+
     <View
         android:id="@+id/vDottedLine"
         android:layout_width="match_parent"
@@ -66,7 +113,7 @@
         android:layout_margin="5dp"
         android:layerType="software"
         android:background="@drawable/shape_dotted_line_blue"
-        app:layout_constraintTop_toBottomOf="@id/llSendCmd"
+        app:layout_constraintTop_toBottomOf="@id/tlInfo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/rvNotify" />

@@ -3,6 +3,7 @@ package com.chwishay.chwsp00.model
 import android.os.Environment
 import android.util.Log
 import com.chwishay.commonlib.tools.formatDateString
+import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.read2FloatBE
 import com.clj.fastble.data.BleDevice
@@ -109,9 +110,6 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
     private var startSaveTime = 0L
     private var stopSaveTime = 0L
     var fileName: String = "${System.currentTimeMillis().formatDateString("yyyy-MM-dd-HH_mm_ss")}"
-        set(value) {
-            field = "${value}_${startSaveTime.formatDateString("yyyy-MM-dd-HH_mm_ss")}"
-        }
     var filePath: String? = null
 
     //数据总接收时长，数据保存记录状态下，只累计接收数据时段时长，但每次重新保存记录会清零(ms)
@@ -128,6 +126,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
      */
     fun startReceive() {
         startReceiveTime = System.currentTimeMillis()
+        "CMD".logE("开始接收数据")
     }
 
     /**
@@ -135,6 +134,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
      */
     fun stopReceive() {
         stopReceiveTime = System.currentTimeMillis()
+        "CMD".logE("停止接收数据")
         if (startReceiveTime <= 0L) {
             throw IllegalStateException("请先调用startReceive()方法开始接收数据")
         } else {
@@ -195,7 +195,7 @@ class BleDeviceInfo(val bleDevice: BleDevice) {
      * 检测目标文件是否存在，不存在则自动创建
      */
     private fun checkFileExists(fileName: String): File {
-        val dir = File("${Environment.getExternalStorageDirectory().absolutePath}/chws/")
+        val dir = File("${Environment.getExternalStorageDirectory().absolutePath}/CHWS/P00")
         if (!dir.exists()) {
             dir.mkdirs()
         }

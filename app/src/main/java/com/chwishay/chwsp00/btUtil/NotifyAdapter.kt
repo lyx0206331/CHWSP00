@@ -7,14 +7,10 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.chwishay.chwsp00.R
-import com.chwishay.chwsp00.activity.ReportActivity
 import com.chwishay.chwsp00.model.BleDeviceInfo
 import com.chwishay.commonlib.tools.*
 import com.chwishay.commonlib.tools.CmdUtil.isIMUData
@@ -23,7 +19,6 @@ import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleNotifyCallback
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.utils.HexUtil
-import com.example.alglibrary.AlgUtil
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.YAxis
@@ -35,10 +30,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import org.jetbrains.anko.find
 import org.jetbrains.anko.runOnUiThread
-import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
-import org.jetbrains.anko.sdk27.coroutines.onClick
-import java.io.File
-import kotlin.concurrent.thread
 
 //                       _ooOoo_
 //                      o8888888o
@@ -69,21 +60,23 @@ import kotlin.concurrent.thread
 class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit) :
     RecyclerView.Adapter<NotifyAdapter.NotifyViewHolder>() {
 
+    var fileName = ""
+        set(value) {
+            field = value
+            val timestamp = System.currentTimeMillis().formatDateString("yyyy-MM-dd-HH_mm_ss")
+            devices?.forEach {
+                it.fileName = "${field}_${it.bleDevice.mac.replace(":", "")}_$timestamp"
+            }
+        }
+
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvDevName = itemView.findViewById<TextView>(R.id.tvDeviceName)
+        val tvDevName = itemView.findViewById<TextView>(R.id.etUserName)
         val tvSysTime = itemView.find<TextView>(R.id.tvSysTime)
-        val tvReceiveTimeLen = itemView.find<TextView>(R.id.tvReceiveTimeLen)
         val tvReceiveSpeed = itemView.find<TextView>(R.id.tvReceiveSpeed)
         val tvTotalData = itemView.find<TextView>(R.id.tvTotalData)
-        val switchNotify = itemView.find<Switch>(R.id.switchNotify)
-        val etFileName = itemView.find<EditText>(R.id.etFileName)
-        val btnSave = itemView.find<Button>(R.id.btnSave)
-        val btnBuildReport = itemView.find<Button>(R.id.btnBuildReport)
-        val btnClear = itemView.find<Button>(R.id.btnClear)
         val tvData = itemView.find<TextView>(R.id.tvData)
             .apply { movementMethod = ScrollingMovementMethod.getInstance() }
         val tvPower = itemView.find<TextView>(R.id.tvPower)
-        val tvRechargeState = itemView.find<TextView>(R.id.tvRechargeState)
         val chart = itemView.find<LineChart>(R.id.chart).also {
             it.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {}
@@ -191,6 +184,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
     var devices: ArrayList<BleDeviceInfo>? = null
         set(value) {
             field = value
+            resetFirstFrameMarks()
             notifyDataSetChanged()
         }
 
@@ -216,12 +210,11 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                     if (index == it.size - 1) {
                         bluetoothGattService.characteristics.forEach { gattCharacteristic ->
                             if (gattCharacteristic.properties.and(BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                                holder.switchNotify.onCheckedChange { buttonView, isChecked ->
-                                    holder.etFileName.isEnabled = !isChecked
+//                                holder.switchNotify.onCheckedChange { _, isChecked ->
                                     bleDeviceInfo.serviceUUID = gattCharacteristic.service.uuid
                                     bleDeviceInfo.notifyUUID = gattCharacteristic.uuid
                                     "UUID".logE("serviceUUID:${bleDeviceInfo.serviceUUID}  notifyUUID:${bleDeviceInfo.notifyUUID}")
-                                    if (isChecked) {
+//                                    if (isChecked) {
                                         bleDeviceInfo.startReceive()
                                         BleManager.getInstance().notify(
                                             this@apply,
@@ -270,7 +263,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                                                 }
                                                         } else {
                                                             if (!firstFrameMarks[position]) {
-                                                                "firstFrame".logE("isNotFirstFrame4Dev$position")
+//                                                                "firstFrame".logE("isNotFirstFrame4Dev$position")
                                                                 bleDeviceInfo.lastData = d
 //                                                            holder.tvSysTime.text =
 //                                                                "系统时间:${bleDeviceInfo.sysTime}ms"
@@ -280,7 +273,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                                                     "总接收数据:${bleDeviceInfo.totalSize}byte"
                                                                 holder.chart.addEntry(d)
                                                             } else {
-                                                                "firstFrame".logE("isFirstFrame4Dev$position")
+//                                                                "firstFrame".logE("isFirstFrame4Dev$position")
                                                                 firstFrameMarks[position] = false
                                                             }
                                                         }
@@ -291,79 +284,76 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                                     }
                                                 }
                                             })
-                                    } else {
-                                        bleDeviceInfo.stopReceive()
-                                        holder.tvReceiveTimeLen.text =
-                                            "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
-                                        BleManager.getInstance().stopNotify(
-                                            this@apply,
-                                            bleDeviceInfo.serviceUUID.toString(),
-                                            bleDeviceInfo.notifyUUID.toString()
-                                        )
-                                    }
-                                }
-                                holder.btnSave.onClick {
-//                                    if (!bleDeviceInfo.needSave && holder.switchNotify.isChecked) {
-//                                        context.showShortToast("请先关闭接收通知")
-//                                        return@onClick
+//                                    } else {
+//                                        bleDeviceInfo.stopReceive()
+//                                        holder.tvReceiveTimeLen.text =
+//                                            "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
+//                                        BleManager.getInstance().stopNotify(
+//                                            this@apply,
+//                                            bleDeviceInfo.serviceUUID.toString(),
+//                                            bleDeviceInfo.notifyUUID.toString()
+//                                        )
 //                                    }
-                                    val fileName = holder.etFileName.text
-                                    if (fileName.isNullOrEmpty() || fileName.trim()
-                                            .isNullOrEmpty()
-                                    ) {
-                                        holder.btnSave.context.showShortToast("请输入文件名")
-                                    } else {
-                                        bleDeviceInfo.needSave = !bleDeviceInfo.needSave
-                                        if (bleDeviceInfo.needSave) {
-                                            bleDeviceInfo.fileName = fileName.toString()
-                                            context.showShortToast("开始保存数据")
-                                            holder.btnSave.text = "停止保存"
-                                        } else {
-                                            context.showShortToast("停止保存数据")
-                                            holder.btnSave.text = "开始保存"
-                                            holder.tvReceiveTimeLen.text =
-                                                "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
-                                        }
-                                    }
-                                }
-                                holder.btnBuildReport.onClick {
-                                    if (bleDeviceInfo.needSave || bleDeviceInfo.filePath == null || !File(
-                                            bleDeviceInfo.filePath
-                                        ).exists()
-                                    ) {
-                                        context.showShortToast("请先保存数据")
-                                        return@onClick
-                                    } else {
-                                        thread {
-                                            val algUtil = AlgUtil()
-                                            val data = algUtil.readFromTxt(bleDeviceInfo.filePath!!)
-                                            val result = algUtil.getTestData(data, 18)
-                                            context.runOnUiThread {
-                                                ReportActivity.startActivity(
-                                                    context,
-                                                    bleDeviceInfo.totalReceiveTime,
-                                                    result.distance,
-                                                    result.stepArray,
-                                                    result.stepCount
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                                holder.btnClear.onClick {
-                                    bleDeviceInfo.totalSize = 0
-                                    holder.tvData.text = ""
-                                    holder.tvTotalData.text = "总接收数据:${bleDeviceInfo.totalSize}byte"
-                                    holder.tvReceiveSpeed.text = "0byte/s"
-                                }
+//                                }
+//                                holder.btnSave.onClick {
+//                                    val fileName = holder.etFileName.text
+//                                    if (fileName.isNullOrEmpty() || fileName.trim()
+//                                            .isNullOrEmpty()
+//                                    ) {
+//                                        holder.btnSave.context.showShortToast("请输入文件名")
+//                                    } else {
+//                                        bleDeviceInfo.needSave = !bleDeviceInfo.needSave
+//                                        if (bleDeviceInfo.needSave) {
+//                                            bleDeviceInfo.fileName = fileName.toString()
+//                                            context.showShortToast("开始保存数据")
+//                                            holder.btnSave.text = "停止保存"
+//                                        } else {
+//                                            context.showShortToast("停止保存数据")
+//                                            holder.btnSave.text = "开始保存"
+//                                            holder.tvReceiveTimeLen.text =
+//                                                "总接收时长:${bleDeviceInfo.totalReceiveTime}ms"
+//                                        }
+//                                    }
+//                                }
+//                                holder.btnBuildReport.onClick {
+//                                    if (bleDeviceInfo.needSave || bleDeviceInfo.filePath == null || !File(
+//                                            bleDeviceInfo.filePath
+//                                        ).exists()
+//                                    ) {
+//                                        context.showShortToast("请先保存数据")
+//                                        return@onClick
+//                                    } else {
+//                                        thread {
+//                                            val algUtil = AlgUtil()
+//                                            val data = algUtil.readFromTxt(bleDeviceInfo.filePath!!)
+//                                            val result = algUtil.getTestData(data, 18)
+//                                            context.runOnUiThread {
+//                                                ReportActivity.startActivity(
+//                                                    context,
+//                                                    bleDeviceInfo.totalReceiveTime,
+//                                                    result.distance,
+//                                                    result.stepArray,
+//                                                    result.stepCount
+//                                                )
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                holder.btnClear.onClick {
+//                                    bleDeviceInfo.totalSize = 0
+//                                    holder.tvData.text = ""
+//                                    holder.tvTotalData.text = "总接收数据:${bleDeviceInfo.totalSize}byte"
+//                                    holder.tvReceiveSpeed.text = "0byte/s"
+//                                }
 
-                                holder.switchNotify.isChecked = false
+//                                holder.switchNotify.isChecked = false
                             }
                         }
                     }
                 }
             }
         }
+//        holder.switchNotify.isChecked = true
     }
 
     fun Byte.convert2Version(): String {
@@ -398,19 +388,19 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
         return devices?.size.orDefault()
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        "detachedRV".logE("onDetachedFromRecyclerView")
-        devices?.forEach {
-            if (it.serviceUUID != null && it.notifyUUID != null) {
-                BleManager.getInstance()
-                    .stopNotify(it.bleDevice, it.serviceUUID.toString(), it.notifyUUID.toString())
-            }
-        }
-    }
-
-    override fun onViewDetachedFromWindow(holder: NotifyViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        "detachedRV".logE("onViewDetachedFromWindow")
-    }
+//    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+//        super.onDetachedFromRecyclerView(recyclerView)
+//        "detachedRV".logE("onDetachedFromRecyclerView")
+//        devices?.forEach {
+//            if (it.serviceUUID != null && it.notifyUUID != null) {
+//                BleManager.getInstance()
+//                    .stopNotify(it.bleDevice, it.serviceUUID.toString(), it.notifyUUID.toString())
+//            }
+//        }
+//    }
+//
+//    override fun onViewDetachedFromWindow(holder: NotifyViewHolder) {
+//        super.onViewDetachedFromWindow(holder)
+//        "detachedRV".logE("onViewDetachedFromWindow")
+//    }
 }

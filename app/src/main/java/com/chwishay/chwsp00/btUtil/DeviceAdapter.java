@@ -30,6 +30,12 @@ public class DeviceAdapter extends BaseAdapter {
     public void addDevice(BleDevice bleDevice) {
         removeDevice(bleDevice);
         bleDeviceList.add(bleDevice);
+        notifyDataSetChanged();
+    }
+
+    public void setDevices(List<BleDevice> devices) {
+        bleDeviceList = devices;
+        notifyDataSetChanged();
     }
 
     public void removeDevice(BleDevice bleDevice) {
@@ -39,6 +45,7 @@ public class DeviceAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clearConnectedDevice() {
@@ -48,6 +55,7 @@ public class DeviceAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clearScanDevice() {
@@ -57,6 +65,7 @@ public class DeviceAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {

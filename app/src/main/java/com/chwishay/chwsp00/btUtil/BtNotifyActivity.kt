@@ -5,7 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.chwishay.chwsp00.NotifyViewModel
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.chwsp00.model.BleDeviceInfo
@@ -13,12 +16,15 @@ import com.chwishay.chwsp00.utils.Observer
 import com.chwishay.chwsp00.utils.ObserverManager
 import com.chwishay.commonlib.tools.CmdUtil
 import com.chwishay.commonlib.tools.logE
+import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import kotlinx.android.synthetic.main.activity_bt_notify.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class BtNotifyActivity : BaseActivity(), Observer {
@@ -39,13 +45,18 @@ class BtNotifyActivity : BaseActivity(), Observer {
         }
     }
 
+    private val vm: NotifyViewModel by viewModels()
+
     private val adapter by lazy {
         NotifyAdapter(this) {
             sendCmd(it.bleDevice, CmdUtil.getTimeSyncCmd())
         }
     }
 
-    private var devices: ArrayList<BleDevice>? = null
+    private var devices: ArrayList<BleDeviceInfo>? = null
+
+    private val startCmd by lazy { CmdUtil.getStartSyncCmd() }
+    private val stopCmd by lazy { CmdUtil.getStopSyncCmd() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +67,13 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     override fun initVariables() {
-        devices = intent.getParcelableArrayListExtra("devices")
+        val devs: ArrayList<BleDevice>? = intent.getParcelableArrayListExtra("devices")
+        devices = getDeviceInfos(devs)
     }
 
-    private fun getDeviceInfos(): ArrayList<BleDeviceInfo> {
+    private fun getDeviceInfos(devs: ArrayList<BleDevice>?): ArrayList<BleDeviceInfo> {
         val list = arrayListOf<BleDeviceInfo>()
-        devices?.forEach {
+        devs?.forEach {
             list.add(BleDeviceInfo(it))
         }
         return list
@@ -69,18 +81,29 @@ class BtNotifyActivity : BaseActivity(), Observer {
 
     override fun initViews() {
 
-        btnSyncData.onClick {
-//            adapter.dataIndex = 0
-            sendSyncCmd(CmdUtil.getStartSyncCmd())
-        }
-        btnCheckTime.onClick {
-            checkTime()
-        }
-        btnStopCollect.onClick {
-            sendCollectCmd(/*CMD_STOP_COLLECT*/CmdUtil.getStopSyncCmd())
+//        btnSyncData.onClick {
+////            adapter.dataIndex = 0
+//            sendSyncCmd(CmdUtil.getStartSyncCmd())
+//        }
+//        btnCheckTime.onClick {
+//            checkTime()
+//        }
+//        btnStopCollect.onClick {
+//            sendStopCmd(/*CMD_STOP_COLLECT*/CmdUtil.getStopSyncCmd())
+//        }
+        btnStart.onClick {
+            if (etUserName.text?.trim().isNullOrEmpty() || etUserId.text?.trim().isNullOrEmpty()) {
+                showShortToast("请输入有效用户姓名和病历号")
+            } else if (!vm.isStartLiveData.value.orDefault()) {
+                sendSyncCmd()
+//                vm.isStartLiveData.value = true
+            } else if (vm.isStartLiveData.value.orDefault()) {
+                sendStopCmd(/*CMD_STOP_COLLECT*/)
+//                vm.isStartLiveData.value = false
+            }
         }
         rvNotify.adapter = adapter
-        adapter.devices = getDeviceInfos()
+        adapter.devices = devices
         //处理RecyclerView内外滑动冲突问题
         rvNotify.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
@@ -99,6 +122,23 @@ class BtNotifyActivity : BaseActivity(), Observer {
         })
 
 //        checkTime()
+
+        vm.isStartLiveData.observe(this) {
+            btnStart.text = if (it) "停止" else "开始"
+            etUserName.isEnabled = !it
+            etUserId.isEnabled = !it
+            if (it) {
+                adapter.fileName = "${etUserName.text}_${etUserId.text}"
+                devices?.forEach { dev ->
+                    dev.totalSize = 0
+                    dev.needSave = true
+                }
+            } else {
+                devices?.forEach { dev ->
+                    dev.needSave = false
+                }
+            }
+        }
     }
 
     /**
@@ -110,11 +150,11 @@ class BtNotifyActivity : BaseActivity(), Observer {
         }
     }
 
-    private fun sendSyncCmd(cmd: ByteArray) {
+    private fun sendSyncCmd() {
         adapter.devices?.get(0)?.let {
             it.sysTime = 0L
             adapter.resetFirstFrameMarks()
-            sendCmd(it.bleDevice, cmd)
+            sendCmd(it.bleDevice, startCmd)
         }
 //        adapter.devices?.forEach {
 //            it.sysTime = 0L
@@ -122,10 +162,10 @@ class BtNotifyActivity : BaseActivity(), Observer {
 //        }
     }
 
-    private fun sendCollectCmd(cmd: ByteArray) {
+    private fun sendStopCmd() {
         adapter.devices?.forEach {
             it.sysTime = 0L
-            sendCmd(it.bleDevice, cmd)
+            sendCmd(it.bleDevice, stopCmd)
         }
     }
 
@@ -142,7 +182,20 @@ class BtNotifyActivity : BaseActivity(), Observer {
                     total: Int,
                     justWrite: ByteArray?
                 ) {
-                    showShortToast("向${device.name}发送指令${justWrite?.contentToString()}成功,时间:${System.currentTimeMillis()}")
+
+                    when {
+                        justWrite?.contentEquals(startCmd) == true -> {
+//                            "CMD".logE("Start:${startCmd?.contentToString()} == ${justWrite?.contentToString()}")
+                            vm.isStartLiveData.value = true
+                        }
+                        justWrite?.contentEquals(stopCmd) == true -> {
+//                            "CMD".logE("Stop:${stopCmd?.contentToString()} == ${justWrite?.contentToString()}")
+                            vm.isStartLiveData.value = false
+                        }
+                        else -> {
+                            showShortToast("向${device.name}发送指令${justWrite?.contentToString()}成功,时间:${System.currentTimeMillis()}")
+                        }
+                    }
                 }
 
                 override fun onWriteFailure(exception: BleException?) {
@@ -155,19 +208,37 @@ class BtNotifyActivity : BaseActivity(), Observer {
         ObserverManager.getInstance().addObservable(this)
     }
 
+    override fun onBackPressed() {
+        lifecycleScope.launch {
+            if (vm.isStartLiveData.value.orDefault()) {
+                sendStopCmd()
+                delay(200)
+            }
+            adapter.devices?.forEach {
+                it.stopReceive()
+                BleManager.getInstance()
+                    .stopNotify(it.bleDevice, it.serviceUUID.toString(), it.notifyUUID.toString())
+            }
+            delay(200)
+            showShortToast("返回")
+            super.onBackPressed()
+        }
+    }
+
     override fun onDestroy() {
+
         super.onDestroy()
         rvNotify.adapter = null
         devices?.forEach {
-            BleManager.getInstance().clearCharacterCallback(it)
+            BleManager.getInstance().clearCharacterCallback(it.bleDevice)
         }
         ObserverManager.getInstance().deleteObserver(this)
     }
 
     override fun disConnected(bleDevice: BleDevice) {
         devices?.forEach {
-            if (bleDevice != null && it.key == bleDevice.key) {
-                showShortToast("设备${it.key}已断开")
+            if (bleDevice.device != null && it.bleDevice.key == bleDevice.key) {
+                showShortToast("设备${it.bleDevice.key}已断开")
             }
         }
     }

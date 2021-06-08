@@ -14,18 +14,12 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvDeviceName"
+                android:id="@+id/etUserName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:text="Device Name"
                 android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switchNotify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="接收数据通知" />
         </TableRow>
 
         <TableRow>
@@ -42,23 +36,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:text="电量:100%" />
-
-            <TextView
-                android:id="@+id/tvRechargeState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="状态:" />
+                android:text="电量:--%" />
         </TableRow>
 
         <TableRow>
-
-            <TextView
-                android:id="@+id/tvReceiveTimeLen"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:text="总接收时长:0ms" />
 
             <TextView
                 android:id="@+id/tvReceiveSpeed"
@@ -69,14 +50,14 @@
 
             <TextView
                 android:id="@+id/tvTotalData"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_weight="1.0"
                 android:text="接收总数据:0byte" />
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="0dp"

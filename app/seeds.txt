@@ -14053,7 +14053,7 @@ com.chwishay.chwsp00.R$id: int img_loading
 androidx.cardview.widget.CardView: int getContentPaddingBottom()
 com.chwishay.chwsp00.R$styleable: int[] CompoundButton
 com.google.android.material.R$style: int Widget_Design_CollapsingToolbar
-com.chwishay.chwsp00.R$id: int tvUserName
+com.chwishay.chwsp00.R$id: int etUserName
 com.uc.crashsdk.b: boolean o()
 com.umeng.umcrash.R$style: int RtlUnderlay_Widget_AppCompat_ActionButton
 com.chwishay.chwsp00.R$attr: int fabAlignmentMode
@@ -15883,7 +15883,7 @@ com.umeng.analytics.pro.as: as()
 com.umeng.analytics.pro.bx: void b()
 com.uc.crashsdk.a: int b(java.lang.String,java.lang.String)
 com.google.android.material.R$id: int default_activity_button
-com.chwishay.chwsp00.R$id: int tvDeviceName
+com.chwishay.chwsp00.R$id: int etUserName
 com.chwishay.chwsp00.R$drawable: int design_bottom_navigation_item_background
 androidx.appcompat.R$style: int Widget_AppCompat_PopupWindow
 androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$VGroup: void setTranslateX(float)

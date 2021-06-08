@@ -12,11 +12,12 @@ import com.clj.fastble.BleManager;
 import com.clj.fastble.data.BleDevice;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectedDevAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<BleDevice> bleDeviceList;
+    private List<BleDevice> bleDeviceList;
 
     public ConnectedDevAdapter(Context context) {
         this.context = context;
@@ -24,12 +25,22 @@ public class ConnectedDevAdapter extends BaseAdapter {
     }
 
     public ArrayList<BleDevice> getAllDevices() {
-        return bleDeviceList;
+        ArrayList list = new ArrayList<BleDevice>();
+        for (int i = 0; i < bleDeviceList.size(); i++) {
+            list.add(bleDeviceList.get(i));
+        }
+        return list;
     }
 
     public void addDevice(BleDevice bleDevice) {
         removeDevice(bleDevice);
         bleDeviceList.add(bleDevice);
+        notifyDataSetChanged();
+    }
+
+    public void setDevices(List<BleDevice> devices) {
+        bleDeviceList = devices;
+        notifyDataSetChanged();
     }
 
     public void removeDevice(BleDevice bleDevice) {
@@ -39,6 +50,7 @@ public class ConnectedDevAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clearConnectedDevice() {
@@ -48,6 +60,7 @@ public class ConnectedDevAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clearScanDevice() {
@@ -57,6 +70,7 @@ public class ConnectedDevAdapter extends BaseAdapter {
                 bleDeviceList.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {

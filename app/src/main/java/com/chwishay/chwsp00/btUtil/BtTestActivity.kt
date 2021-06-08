@@ -3,26 +3,18 @@ package com.chwishay.chwsp00.btUtil
 import android.Manifest
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
-import com.chwishay.chwsp00.utils.ObserverManager
 import com.chwishay.commonlib.tools.PermissionUtil
-import com.chwishay.commonlib.tools.logE
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
-import com.clj.fastble.callback.BleGattCallback
-import com.clj.fastble.callback.BleScanCallback
 import com.clj.fastble.data.BleDevice
-import com.clj.fastble.exception.BleException
-import com.clj.fastble.scan.BleScanRuleConfig
 import kotlinx.android.synthetic.main.activity_bt_test.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.textResource
@@ -56,7 +48,7 @@ class BtTestActivity : BaseActivity() {
                 override fun onConnect(bleDevice: BleDevice?) {
                     if (!BleManager.getInstance().isConnected(bleDevice)) {
                         BleManager.getInstance().cancelScan()
-                        connect(bleDevice)
+                        BleUtil.connect(bleDevice)
                     }
                 }
 
@@ -89,7 +81,7 @@ class BtTestActivity : BaseActivity() {
             if (btn_scan.text == getString(R.string.start_scan)) {
                 checkPermissions()
             } else {
-                BleManager.getInstance().cancelScan()
+                BleUtil.stopScan()
             }
         }
         btn_entry.onClick {
@@ -104,6 +96,54 @@ class BtTestActivity : BaseActivity() {
         }
         list_device.adapter = deviceAdapter
         list_connected.adapter = connectedAdapter
+
+        BleUtil.scanStateLiveData.observe(this) {
+            when (it) {
+                BleUtil.SCAN_STATE_START -> {
+                    deviceAdapter.clearScanDevice()
+                    deviceAdapter.notifyDataSetChanged()
+                    img_loading.startAnimation(operatingAnim)
+                    img_loading.isVisible = true
+                    btn_scan.textResource = R.string.stop_scan
+                }
+                BleUtil.SCAN_STATE_SCANNING -> {
+                }
+                BleUtil.SCAN_STATE_FINISH -> {
+                    img_loading.clearAnimation()
+                    img_loading.isInvisible = true
+                    btn_scan.textResource = R.string.start_scan
+                }
+            }
+        }
+
+        BleUtil.scannedDevsLiveData.observe(this) {
+            deviceAdapter.setDevices(it)
+        }
+
+        BleUtil.connectStateLiveData.observe(this) {
+            when (it) {
+                BleUtil.CONN_STATE_START -> {
+                    progressDialog.show()
+                }
+                BleUtil.CONN_STATE_SUCCESS -> {
+                    progressDialog.dismiss()
+                }
+                BleUtil.CONN_STATE_FAIL -> {
+                    img_loading.clearAnimation()
+                    img_loading.isInvisible = true
+                    btn_scan.textResource = R.string.start_scan
+                    progressDialog.dismiss()
+                    showShortToast(R.string.connect_fail)
+                }
+                BleUtil.CONN_STATE_DISCONNECT -> {
+                    progressDialog.dismiss()
+                }
+            }
+        }
+
+        BleUtil.connectedDevsLiveData.observe(this) {
+            connectedAdapter.setDevices(it)
+        }
     }
 
     override fun loadData() {
@@ -138,7 +178,7 @@ class BtTestActivity : BaseActivity() {
                 permissions,
                 object : PermissionUtil.IPermissionCallback {
                     override fun allowedPermissions() {
-                        startScan()
+                        BleUtil.startScan()
                     }
 
                     override fun deniedPermissions() {
@@ -156,7 +196,7 @@ class BtTestActivity : BaseActivity() {
         deviceAdapter.notifyDataSetChanged()
     }
 
-    private fun startScan() {
+    /*private fun startScan() {
         BleManager.getInstance().initScanRule(
             BleScanRuleConfig.Builder().setServiceUuids(null).setDeviceName(true, null)
                 .setDeviceMac("").setAutoConnect(false).setScanTimeOut(10000).build()
@@ -244,5 +284,5 @@ class BtTestActivity : BaseActivity() {
                 }
             }
         })
-    }
+    }*/
 }

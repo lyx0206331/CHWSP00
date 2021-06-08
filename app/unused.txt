@@ -24999,7 +24999,7 @@ androidx.legacy.content.WakefulBroadcastReceiver:
     public static int mNextId
 com.chwishay.chwsp00.databinding.ItemTestUsersBinding:
     public final androidx.appcompat.widget.AppCompatImageView ivUserAvatar
-    public final androidx.appcompat.widget.AppCompatTextView tvUserName
+    public final androidx.appcompat.widget.AppCompatTextView etUserName
 jxl.biff.drawing.Dgg:
     public int maxShapeId
     public int drawingsSaved
