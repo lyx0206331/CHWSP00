@@ -58,6 +58,8 @@ class BtNotifyActivity : BaseActivity(), Observer {
     private val startCmd by lazy { CmdUtil.getStartSyncCmd() }
     private val stopCmd by lazy { CmdUtil.getStopSyncCmd() }
 
+    private var clickTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -94,12 +96,19 @@ class BtNotifyActivity : BaseActivity(), Observer {
         btnStart.onClick {
             if (etUserName.text?.trim().isNullOrEmpty() || etUserId.text?.trim().isNullOrEmpty()) {
                 showShortToast("请输入有效用户姓名和病历号")
-            } else if (!vm.isStartLiveData.value.orDefault()) {
-                sendSyncCmd()
+            } else {
+                if (!vm.isStartLiveData.value.orDefault()) {
+                    clickTime = System.currentTimeMillis()
+                    sendSyncCmd()
 //                vm.isStartLiveData.value = true
-            } else if (vm.isStartLiveData.value.orDefault()) {
-                sendStopCmd(/*CMD_STOP_COLLECT*/)
+                } else if (vm.isStartLiveData.value.orDefault()) {
+                    if (System.currentTimeMillis() < clickTime + 10000) {
+                        showShortToast("请开始10秒后再停止!")
+                    } else {
+                        sendStopCmd(/*CMD_STOP_COLLECT*/)
+                    }
 //                vm.isStartLiveData.value = false
+                }
             }
         }
         rvNotify.adapter = adapter
@@ -124,7 +133,7 @@ class BtNotifyActivity : BaseActivity(), Observer {
 //        checkTime()
 
         vm.isStartLiveData.observe(this) {
-            btnStart.text = if (it) "停止" else "开始"
+            btnStart.text = if (it) "停止采集" else "开始采集"
             etUserName.isEnabled = !it
             etUserId.isEnabled = !it
             if (it) {

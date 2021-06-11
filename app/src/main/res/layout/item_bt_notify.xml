@@ -25,21 +25,13 @@
         <TableRow>
 
             <TextView
-                android:id="@+id/tvSysTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:text="固件版本:--.--.--" />
-
-            <TextView
                 android:id="@+id/tvPower"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:textStyle="bold"
+                android:textColor="@color/blue169bd5"
                 android:text="电量:--%" />
-        </TableRow>
-
-        <TableRow>
 
             <TextView
                 android:id="@+id/tvReceiveSpeed"
@@ -47,6 +39,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:text="接收速度:0byte/s" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tvSysTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="固件版本:--.--.--" />
 
             <TextView
                 android:id="@+id/tvTotalData"
@@ -112,20 +114,30 @@
         </TableRow>
     </TableLayout>
 
-    <TextView
-        android:id="@+id/tvData"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginTop="5dp"
-        android:padding="5dp"
-        android:scrollbars="vertical"
-        android:background="@drawable/shape_blue_stroke" />
+        android:orientation="horizontal">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="5dp" />
+        <TextView
+            android:id="@+id/tvData"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:padding="5dp"
+            android:scrollbars="vertical"
+            android:background="@drawable/shape_blue_stroke" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/shape_blue_stroke" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
         android:layout_width="match_parent"

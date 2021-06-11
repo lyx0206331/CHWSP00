@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
@@ -32,54 +32,61 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/llDevices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/list_connected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:scrollbars="none"
+            tools:listitem="@layout/item_bt_connected"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="开始测试"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray868686" />
 
         <ListView
             android:id="@+id/list_device"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:layout_marginTop="10dp"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="0.5dp"
-            android:paddingEnd="5dp"
             android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:scrollbars="none"
             tools:listitem="@layout/item_bt_device" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.0"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/list_connected"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:divider="@android:color/darker_gray"
-                android:dividerHeight="0.5dp"
-                android:paddingEnd="5dp"
-                android:paddingStart="5dp"
-                android:scrollbars="none"
-                tools:listitem="@layout/item_bt_connected" />
-
-            <Button
-                android:id="@+id/btn_entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/enter"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
     </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNoDevice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="暂无设备，请点击搜索按钮"
+        android:visibility="gone" />
 
 
 </LinearLayout>

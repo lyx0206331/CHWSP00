@@ -7,104 +7,56 @@
     android:layout_height="match_parent"
     tools:context=".btUtil.BtNotifyActivity">
 
-    <LinearLayout
-        android:id="@+id/llSendCmd"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tlInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tlInfo"
-        android:layout_margin="5dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_margin="5dp">
 
-        <!--<EditText
-            android:id="@+id/etInputCmd"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etUserName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:layout_margin="5dp"
-            android:singleLine="true"
-            android:hint="请输入十六进制指令" />
+            android:lines="1"
+            android:inputType="text"
+            android:hint="用户姓名"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btnStart" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etUserId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:lines="1"
+            android:inputType="number"
+            android:hint="病历编号"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@id/etUserName"
+            app:layout_constraintTop_toBottomOf="@id/etUserName"
+            app:layout_constraintRight_toRightOf="@id/etUserName" />
 
         <Button
-            android:id="@+id/btnSend"
+            android:id="@+id/btnStart"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="发送" />-->
+            android:layout_height="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="开始采集"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/etUserName"
+            app:layout_constraintTop_toTopOf="@id/etUserName"
+            app:layout_constraintBottom_toBottomOf="@id/etUserId" />
 
-        <Button
-            android:id="@+id/btnSyncData"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:layout_marginRight="10dp"
-            android:text="同步数据" />
-
-        <Button
-            android:id="@+id/btnCheckTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:layout_marginRight="10dp"
-            android:text="时间校正"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btnStopCollect"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:text="停止采集" />
-    </LinearLayout>
-
-    <TableLayout
-        android:id="@+id/tlInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rvNotify">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etUserName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:lines="1"
-                android:inputType="text"
-                android:hint="用户姓名"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etUserId"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:lines="1"
-                android:inputType="number"
-                android:hint="病历编号"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btnStart"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="开始" />
-        </TableRow>
-    </TableLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/vDottedLine"

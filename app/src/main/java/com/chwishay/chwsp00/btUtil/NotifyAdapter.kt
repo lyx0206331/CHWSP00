@@ -83,23 +83,24 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
 
                 override fun onNothingSelected() {}
             })
-            it.description.isEnabled = true
+            it.description.isEnabled = false
             it.setTouchEnabled(true)
             it.isDragEnabled = true
             it.setScaleEnabled(true)
             it.setDrawGridBackground(false)
             it.setPinchZoom(true)
-            it.setBackgroundColor(Color.LTGRAY)
+//            it.setBackgroundColor(Color.WHITE)
             it.data = LineData().apply { setValueTextColor(Color.WHITE) }
             it.legend.apply {
                 form = Legend.LegendForm.LINE
                 textColor = Color.WHITE
+                isEnabled = false
             }
             it.xAxis.apply {
                 textColor = Color.WHITE
                 setDrawGridLines(false)
                 setAvoidFirstLastClipping(false)
-                isEnabled = true
+                isEnabled = false
             }
 //            it.axisLeft.apply {
 //                textColor = Color.WHITE
@@ -110,7 +111,6 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
             //根据数据自动缩放展示最大最小值,不能设置axisLeft,否则自动缩放无效
             it.isAutoScaleMinMaxEnabled = true
             it.axisRight.isEnabled = false
-            it.description.isEnabled = false
         }
     }
 
@@ -124,12 +124,15 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                 lds.setCircleColor(Color.WHITE)
                 lds.lineWidth = 1f
                 lds.circleRadius = 2f
+//                lds.setDrawFilled(false)
                 lds.fillAlpha = 65
                 lds.fillColor = color
                 lds.highLightColor = Color.rgb(244, 177, 177)
+//                lds.setDrawValues(false)
                 lds.valueTextColor = Color.WHITE
                 lds.valueTextSize = 9f
                 lds.setDrawCircles(false)
+//                lds.setDrawHighlightIndicators(false)
                 d.addDataSet(lds)
             }
         imuData.parseImuData()!![0].let { entity ->
@@ -174,7 +177,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
 
             this.notifyDataSetChanged()
 
-            this.setVisibleXRangeMaximum(1000f)
+            this.setVisibleXRangeMaximum(500f)
 
             this.moveViewToX(d.entryCount.toFloat())
 

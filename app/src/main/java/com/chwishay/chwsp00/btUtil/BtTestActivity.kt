@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isInvisible
@@ -12,6 +13,7 @@ import androidx.core.view.isVisible
 import com.chwishay.chwsp00.R
 import com.chwishay.chwsp00.baseComponent.BaseActivity
 import com.chwishay.commonlib.tools.PermissionUtil
+import com.chwishay.commonlib.tools.orDefault
 import com.chwishay.commonlib.tools.showShortToast
 import com.clj.fastble.BleManager
 import com.clj.fastble.data.BleDevice
@@ -107,17 +109,28 @@ class BtTestActivity : BaseActivity() {
                     btn_scan.textResource = R.string.stop_scan
                 }
                 BleUtil.SCAN_STATE_SCANNING -> {
+                    tvNoDevice.text = "正在搜索设备..."
                 }
                 BleUtil.SCAN_STATE_FINISH -> {
                     img_loading.clearAnimation()
                     img_loading.isInvisible = true
                     btn_scan.textResource = R.string.start_scan
+                    if (BleUtil.scannedDevsLiveData.value?.size.orDefault() <= 0) {
+                        tvNoDevice.text = "暂无设备，请点击搜索按钮"
+                    }
                 }
             }
         }
 
         BleUtil.scannedDevsLiveData.observe(this) {
-            deviceAdapter.setDevices(it)
+            if (it.isNullOrEmpty()) {
+                llDevices.visibility = View.GONE
+                tvNoDevice.visibility = View.VISIBLE
+            } else {
+                llDevices.visibility = View.VISIBLE
+                tvNoDevice.visibility = View.GONE
+                deviceAdapter.setDevices(it)
+            }
         }
 
         BleUtil.connectStateLiveData.observe(this) {
@@ -142,6 +155,13 @@ class BtTestActivity : BaseActivity() {
         }
 
         BleUtil.connectedDevsLiveData.observe(this) {
+            if (it.isNullOrEmpty()) {
+                btn_entry.visibility = View.GONE
+                list_connected.visibility = View.GONE
+            } else {
+                btn_entry.visibility = View.VISIBLE
+                list_connected.visibility = View.VISIBLE
+            }
             connectedAdapter.setDevices(it)
         }
     }
