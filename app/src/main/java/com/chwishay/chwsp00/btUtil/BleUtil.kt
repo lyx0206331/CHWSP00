@@ -13,6 +13,8 @@ import com.clj.fastble.callback.BleScanCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.scan.BleScanRuleConfig
+import java.util.*
+import kotlin.collections.ArrayList
 
 //                       _ooOoo_
 //                      o8888888o
@@ -67,9 +69,11 @@ object BleUtil {
     private val scannedList = ArrayList<BleDevice>()
     private val connectedList = ArrayList<BleDevice>()
 
-    fun startScan() {
+    fun startScan(nameFilter: String? = "GAIT_DEVICE_CHWS") {
         BleManager.getInstance().initScanRule(
-            BleScanRuleConfig.Builder().setServiceUuids(null).setDeviceName(true, null)
+            BleScanRuleConfig.Builder()
+                .setServiceUuids(arrayOf(UUID.fromString(BtNotifyActivity.SERVICE_UUID)))
+                .setDeviceName(true, nameFilter)
                 .setDeviceMac("").setAutoConnect(false).setScanTimeOut(10000).build()
         )
         BleManager.getInstance().scan(object : BleScanCallback() {
@@ -84,7 +88,7 @@ object BleUtil {
                 BaseAct.TAG.logE("${bleDevice.toString()}")
                 scanStateLiveData.postValue(SCAN_STATE_SCANNING)
                 bleDevice?.let {
-                    if (!TextUtils.isEmpty(it.name) && it.name.startsWith("BLE_APP")) {
+                    if (!TextUtils.isEmpty(it.name)/* && it.name.startsWith(nameFilter)*/) {
                         scannedList.add(bleDevice)
                         scannedDevsLiveData.postValue(scannedList.toMutableList())
                     }
