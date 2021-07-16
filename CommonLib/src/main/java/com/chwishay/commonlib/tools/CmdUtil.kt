@@ -41,6 +41,7 @@ object CmdUtil {
     const val TYPE_CONN_STATE = 0xA5
     const val TYPE_SYNC_TIME = 0xA6
     const val TYPE_FIRMWARE_VERSION = 0xA7
+    const val TYPE_SYS_STATE = 0xA8
 
     @Retention(AnnotationRetention.SOURCE)
     @IntDef(

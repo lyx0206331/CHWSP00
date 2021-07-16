@@ -313,7 +313,7 @@ fun ByteArray?.formatHexString(seperator: String = ""): String? =
         val sb = StringBuilder()
         this.forEach { item ->
             var hex = Integer.toHexString(item.toInt().and(0xff))
-            if (hex.length == 1) hex = "0$this"
+            if (hex.length == 1) hex = "0$hex"
             sb.append("$hex$seperator")
         }
         sb.toString().trim()

@@ -72,6 +72,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
     class NotifyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvDevName = itemView.findViewById<TextView>(R.id.etUserName)
         val tvSysTime = itemView.find<TextView>(R.id.tvSysTime)
+        val tvSysState = itemView.find<TextView>(R.id.tvSysState)
         val tvReceiveSpeed = itemView.find<TextView>(R.id.tvReceiveSpeed)
         val tvTotalData = itemView.find<TextView>(R.id.tvTotalData)
         val tvData = itemView.find<TextView>(R.id.tvData)
@@ -258,6 +259,14 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
                                                                         CmdUtil.TYPE_FIRMWARE_VERSION.toByte() -> {
                                                                             holder.tvSysTime.text =
                                                                                 "固件版本:${dataEntity.content[0].convert2Version()}"
+                                                                        }
+                                                                        CmdUtil.TYPE_SYS_STATE.toByte() -> {
+                                                                            holder.tvSysState.text =
+                                                                                "系统状态:${
+                                                                                    dataEntity.content.formatHexString(
+                                                                                        " "
+                                                                                    )
+                                                                                }"
                                                                         }
                                                                         else -> {
                                                                         }

@@ -160,15 +160,15 @@ class BtNotifyActivity : BaseActivity(), Observer {
     }
 
     private fun sendSyncCmd() {
-        adapter.devices?.get(0)?.let {
+//        adapter.devices?.get(0)?.let {
+//            it.sysTime = 0L
+//            adapter.resetFirstFrameMarks()
+//            sendCmd(it.bleDevice, startCmd)
+//        }
+        adapter.devices?.forEach {
             it.sysTime = 0L
-            adapter.resetFirstFrameMarks()
             sendCmd(it.bleDevice, startCmd)
         }
-//        adapter.devices?.forEach {
-//            it.sysTime = 0L
-//            sendCmd(it.bleDevice, cmd)
-//        }
     }
 
     private fun sendStopCmd() {

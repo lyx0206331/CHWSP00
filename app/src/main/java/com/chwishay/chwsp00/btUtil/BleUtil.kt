@@ -69,11 +69,11 @@ object BleUtil {
     private val scannedList = ArrayList<BleDevice>()
     private val connectedList = ArrayList<BleDevice>()
 
-    fun startScan(nameFilter: String? = "GAIT_DEVICE_CHWS") {
+    fun startScan(vararg nameFilter: String? = arrayOf("GAIT_DEVICE_CHWS", "APP_")) {
         BleManager.getInstance().initScanRule(
             BleScanRuleConfig.Builder()
                 .setServiceUuids(arrayOf(UUID.fromString(BtNotifyActivity.SERVICE_UUID)))
-                .setDeviceName(true, nameFilter)
+                .setDeviceName(true, *nameFilter)
                 .setDeviceMac("").setAutoConnect(false).setScanTimeOut(10000).build()
         )
         BleManager.getInstance().scan(object : BleScanCallback() {
