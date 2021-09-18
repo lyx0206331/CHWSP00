@@ -206,6 +206,7 @@ class NotifyAdapter(val context: Context, val callback: (BleDeviceInfo) -> Unit)
     }
 
     override fun onBindViewHolder(holder: NotifyViewHolder, position: Int) {
+        val position = holder.adapterPosition
         val bleDeviceInfo = devices?.get(position)
         bleDeviceInfo?.bleDevice?.apply {
             holder.tvDevName.text = "$name($mac)"
